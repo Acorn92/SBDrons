@@ -24,6 +24,7 @@ class AngleDinamic:
         '''
         self.l = l
         self.k_b = k_b
+        
         self.rotorCount = rotorCount
         self.acceleration = accInit
         self.velocity = velInit
