@@ -1,0 +1,4 @@
+/home/ac/Projects/SkillboxDrons/lsb4/CMakeFiles/edit_cache.dir
+/home/ac/Projects/SkillboxDrons/lsb4/CMakeFiles/main.dir
+/home/ac/Projects/SkillboxDrons/lsb4/CMakeFiles/rebuild_cache.dir
+/home/ac/Projects/SkillboxDrons/lsb4/CMakeFiles/multicoter_simulator.dir

@@ -9,6 +9,8 @@
 const std::string userPath = "..";
 const std::string pathQuadModelConfig = userPath + "/config/quadModelConfig.yaml";
 const std::string pathQuadControlSystemConfig = userPath + "/config/quadControlSystem.yaml";
+// const std::string pathQuadModelConfig = "config/quadModelConfig.yaml";
+// const std::string pathQuadControlSystemConfig = "config/quadControlSystem.yaml";
 
 // Параметры математической модели
 struct ParamsQuadrotor

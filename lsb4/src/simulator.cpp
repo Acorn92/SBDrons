@@ -50,6 +50,15 @@ void Simulator::run()
 	{
 		// тут необходимо вызывать методы для получения комманд управления
 		// тут необходимо вызывать методы для вычисления функции правых частей
+		// VectorXd_t angularVelocityRotors(4);
+
+		// angularVelocityRotors << 1000, 1000, 1000, 1000;
+		// stateVector = mathModelQuadrotor->functionRight(stateVector, angularVelocityRotors);
+
+	    stateVector.Pitch = 0; 
+	    stateVector.Roll = 0;
+	    stateVector.Yaw = 90;
+		mathModelQuadrotor->TestMatrRotation(stateVector);
 		// математической модели, выполнять интегрирование приращений и формирование вектора состояния
 		// Прим. Вектор состояния предлагается использовать в виде структуры(описание структуры в message.hpp)
 		
@@ -57,23 +66,23 @@ void Simulator::run()
 		// Вектор состояния в результате должен формироваться по результатам интегрирования приращений
 		// математической модели(интегрирования линейных и угловых ускорений)
 		// Положение ЛА в стартовой СК
-	    stateVector.X = 0; 
-	    stateVector.Y = 0;
-	    stateVector.Z = 3;
-	    // Скорость ЛА в стартовой СК
-	    stateVector.VelX = 0;
-	    stateVector.VelY = 0;
-	    stateVector.VelZ = 0;
-	    // Угловое положение ЛА
-	    stateVector.Pitch = 0;
-	    stateVector.Roll = 0;
-	    stateVector.Yaw = 0;
-	    // Угловая скорость ЛА
-	    stateVector.PitchRate = 0;
-	    stateVector.RollRate = 0;
-	    stateVector.YawRate = 0;
-		// устанавливаем метку времени
-		stateVector.timeStamp = t;
+	    // stateVector.X = 0; 
+	    // stateVector.Y = 0;
+	    // stateVector.Z = 3;
+	    // // Скорость ЛА в стартовой СК
+	    // stateVector.VelX = 0;
+	    // stateVector.VelY = 0;
+	    // stateVector.VelZ = 0;
+	    // // Угловое положение ЛА
+	    // stateVector.Pitch = 0;
+	    // stateVector.Roll = 0;
+	    // stateVector.Yaw = 0;
+	    // // Угловая скорость ЛА
+	    // stateVector.PitchRate = 0;
+	    // stateVector.RollRate = 0;
+	    // stateVector.YawRate = 0;
+		// // устанавливаем метку времени
+		// stateVector.timeStamp = t;
 		// Отправляем вектор состояния
 		sendMessage(stateVector);
 		// Для простейшей имитации движения аппарата в реальном времени 

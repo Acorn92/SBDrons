@@ -26,6 +26,8 @@ set(SIM_CPP_FILES
 	src/configLoader.cpp
 	src/motionPlanner.cpp
 )
+
+set(CMAKE_BUILD_TYPE Debug)
 # Добавляем библиотеку для симулятора БЛА
 add_library(multicoter_simulator STATIC ${SIM_CPP_FILES})
 # Добавляем исполняемый файл

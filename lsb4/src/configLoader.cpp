@@ -1,5 +1,6 @@
 #include "configLoader.hpp"
 
+#include <iostream>
 /**
  * @brief Чтение файла конфигурации модели системы,
  * 		установка параметров модели согласно конфигурации
@@ -9,7 +10,9 @@
  */
 void	loadModelConfig(const std::string &fileName, ParamsQuadrotor &quadParam, ParamsSimulator &simParam)
 {
+	std::cout << fileName << std::endl;
 	YAML::Node fs = YAML::LoadFile(fileName);
+	
 	// Устанавливаем параметры математической модели
 	quadParam.mass 					= fs["mass"].as<double>();
 	quadParam.lengthOfFlyerArms 	= fs["lengthOfFlyerArms"].as<double>();

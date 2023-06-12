@@ -1,24 +1,29 @@
-#include 	<simulator.hpp>
-#include 	<typesData.hpp>
-#include 	<configLoader.hpp>
+#include <simulator.hpp>
+#include <typesData.hpp>
+#include <configLoader.hpp>
+
+#include <iostream>
 
 
-int	main()
+
+int	main(int argc, char *argv[])
 {
-	// создаем экземпляры структур под параметры симулятора
+	// // создаем экземпляры структур под параметры симулятора
 	ParamsQuadrotor		parmsQuadrotor;
 	ParamsSimulator		paramsSimulator;
 	ParamsControlSystem	paramsControlSystem;
 
-	// заполнение параметров квадрокоптера и симулятора
+	// std::cout <<  << std::endl;
+
+	// // заполнение параметров квадрокоптера и симулятора
 	loadModelConfig(pathQuadModelConfig, parmsQuadrotor, paramsSimulator);
 
-	// заполнение параметров
+	// // заполнение параметров
 	loadControlSysConfig(pathQuadControlSystemConfig, paramsControlSystem);
 
-	// Создаем объект симулятора
+	// // Создаем объект симулятора
 	Simulator	uavSim(parmsQuadrotor, paramsSimulator, paramsControlSystem);
-	// Запускаем симуляцию
+	// // Запускаем симуляцию
 	uavSim.run();
 
 

@@ -8,7 +8,7 @@
  * @param yaw рысканье
  * @return матрица направляющих косинусов
  */
-Eigen::Matrix3d	Math::rotationMatrix(double pitch, double roll, double yaw)// проверить подстановку roll, pitch, yaw
+Eigen::Matrix3d	Math::rotationMatrix(double roll, double pitch, double yaw)// проверить подстановку roll, pitch, yaw
 {
 	Eigen::Matrix3d R;
 

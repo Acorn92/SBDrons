@@ -19,8 +19,14 @@ class MathModelQuadrotor
 		Eigen::Vector3d			angularAcceleration;
 		Eigen::Vector3d			angularVelocity;
 		Eigen::Vector3d			orientation;
-
+	public:	
 		StateVector		functionRight(StateVector &lastStateVector, VectorXd_t rotorsAngularVelocity);
+		Eigen::Vector3d TestMatrRotation(StateVector &lastStateVector);
 };
+
+// размер вектора значений правой части
+const int SIZE_FUNCTION_RIGHT = 6;
+
+const int NUMBER_OF_AXIS = 3;
 
 #endif

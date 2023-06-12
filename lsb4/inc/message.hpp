@@ -14,9 +14,9 @@ struct StateVector
 	double VelY;
 	double VelZ;
 	// Угловое положение ЛА
-	double Pitch;
-	double Roll;
-	double Yaw;
+	double Pitch;//тангаж
+	double Roll;//крен
+	double Yaw;//рыскание
 	// Угловая скорость ЛА
 	double PitchRate;
 	double RollRate;
