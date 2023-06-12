@@ -24,7 +24,7 @@ class AngleDinamic:
         '''
         self.l = l
         self.k_b = k_b
-        
+
         self.rotorCount = rotorCount
         self.acceleration = accInit
         self.velocity = velInit
@@ -55,8 +55,10 @@ class AngleDinamic:
         raznW = w[0]
         for i in range(1, self.rotorCount):
             raznW -= w[i]
-        # raznW = w[1] - w[0]
-        M = self.k_b * self.l * raznW
+      
+        # w1 = (rotorsAngularAcc + cmdT) ** 2
+        # w2 = ((rotorsAngularAcc*(-1)) + cmdT) ** 2
+        M = (self.k_b * self.l )* raznW
 
         self.acceleration = M/Iy
 
@@ -68,9 +70,9 @@ class AngleDinamic:
 
         '''
         #интегрируем угловое ускорение чтобы получить угловую скорость
-        self.velocity = self.acceleration * dt
+        self.velocity += self.acceleration * dt
         #интегрируем угловую скорость чтобы получить угловое положение
-        self.position = self.velocity * dt
+        self.position += self.velocity * dt
 
     def calculatePos(self, u, cmdT, Iy, dt):
         '''
@@ -243,7 +245,8 @@ class Simulator():
 
             # рассчитываем новое управляющие воздействие
             # на основе текущего положения(pose) ЛА 
-            u = self.controlSys1.PID(pose, self.dt) # тут получили скорость
+            u = self.controlSys1.PID(pose, self.dt) # тут получили угловую скорость
+            # self.controlSys2.setDesiredPosition(0.1)
             self.controlSys2.setDesiredPosition(u)
             u1 = self.controlSys2.PID(vel, self.dt) # тут получили ускорение
             # Рассчитываем положение ЛА с учетом полученного
@@ -282,16 +285,16 @@ class Simulator():
 '''
  Объявим параметры для моделирования
 '''
-k_p = 300 #коэффициент Пропорционального регулирования
-k_i = 35 #коэффициент Интегрального регулирования
-k_d = 100 #коэффициент Дифференциального регулирования
+k_p = 590  # коэффициент Пропорционального регулирования
+k_i = 15  # коэффициент Интегрального регулирования
+k_d = 500  # коэффициент Дифференциального регулирования
 
-k_p2 = 300 #коэффициент Пропорционального регулирования
-k_i2 = 35 #коэффициент Интегрального регулирования
-k_d2 = 180 #коэффициент Дифференциального регулирования
+k_p2 = 400  # коэффициент Пропорционального регулирования
+k_i2 = 10  # коэффициент Интегрального регулирования
+k_d2 = 5  # коэффициент Дифференциального регулирования
 
-Tend = 10 # конечное время моделирования 
-dt = 0.01 # шаг моделирования системы 
+Tend = 10  # конечное время моделирования
+dt = 0.01  # шаг моделирования системы
 
 # длина плеча ЛА
 l = 0.17
@@ -300,16 +303,15 @@ k_b = 3.9865e-08
 # Количество двигателей ЛА
 rotorCount = 2
 # Ограничение на угловую скорость двигателей рад/сек
-motorSpeedLimit = 1000
+motorSpeedLimit = 100
 
 uavSimpleDynamic = AngleDinamic(l, k_b, rotorCount, 0, 0, 0)
-controller1 = ControlSystem(k_p, k_i, k_d, 100)
-controller2 = ControlSystem(k_p2, k_i2, k_d2, 1500)
+controller1 = ControlSystem(k_p, k_i, k_d, 75)
+controller2 = ControlSystem(k_p2, k_i2, k_d2, 1000)
 '''
 Установим целевое положение для нашей системы
 '''
 controller1.setDesiredPosition(30)
-
 
 """
 Создадим объект симулятора и передадим в него контроллер
