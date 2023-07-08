@@ -6,6 +6,10 @@
 
 #IncludeRegexTransform: 
 
+/home/ac/Projects/SkillboxDrons/lsb4/src/math.cpp
+math.hpp
+-
+
 /home/ac/Projects/SkillboxDrons/lsb4/src/mathModelQuadrotor.cpp
 mathModelQuadrotor.hpp
 /home/ac/Projects/SkillboxDrons/lsb4/src/mathModelQuadrotor.hpp

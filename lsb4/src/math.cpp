@@ -3,18 +3,22 @@
 /**
  * @brief матрица поворотов
  * 
- * @param roll крен
- * @param pitch тангаж
- * @param yaw рысканье
+ * @param roll крен бетта
+ * @param pitch тангаж альфа
+ * @param yaw рысканье - угол гамма
  * @return матрица направляющих косинусов
  */
 Eigen::Matrix3d	Math::rotationMatrix(double roll, double pitch, double yaw)// проверить подстановку roll, pitch, yaw
 {
 	Eigen::Matrix3d R;
 
-	R << 	c(yaw)*c(roll),							s(yaw)*c(roll), 							-s(roll),
-			c(yaw)*s(pitch)*s(roll) - s(yaw)*c(pitch),	s(yaw)*s(pitch)*s(roll) + c(yaw)*c(pitch),	s(pitch)*c(roll),
-			c(yaw)*s(roll)*c(pitch) + s(yaw)*s(pitch),	s(yaw)*c(pitch)*s(roll) - c(yaw)*s(pitch),	c(pitch)*c(roll);
+	// R << 	c(yaw)*c(roll),							s(yaw)*c(roll), 							-s(roll),
+	// 		c(yaw)*s(pitch)*s(roll) - s(yaw)*c(pitch),	s(yaw)*s(pitch)*s(roll) + c(yaw)*c(pitch),	s(pitch)*c(roll),
+	// 		c(yaw)*s(roll)*c(pitch) + s(yaw)*s(pitch),	s(yaw)*c(pitch)*s(roll) - c(yaw)*s(pitch),	c(pitch)*c(roll);
+
+	R << 	c(yaw)*c(roll),								-s(yaw)*c(roll), 							s(roll),
+			s(pitch)*s(roll)*c(yaw) + s(yaw)*c(pitch),	-s(yaw)*s(pitch)*s(roll) + c(yaw)*c(pitch),	-s(pitch)*c(roll),
+			s(pitch)*s(yaw) - s(roll)*c(pitch)*c(yaw),	s(yaw)*c(pitch)*s(roll) + c(yaw)*s(pitch),	c(pitch)*c(roll);
 
 	return (R);
 }
