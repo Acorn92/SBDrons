@@ -32,6 +32,27 @@ struct StateVector
 	// double Aay;
 	// double Aaz;
 
+	double &operator[](int i)
+	{
+		switch (i)
+		{
+			case 0: return this->X;
+			case 1: return this->Y;
+			case 2: return this->Z;
+			case 3: return this->Pitch;
+			case 4: return this->Roll;
+			case 5: return this->Yaw;
+			case 6: return this->VelX;
+			case 7: return this->VelY;
+			case 8: return this->VelZ;
+			case 9: return this->PitchRate;
+			case 10: return this->RollRate;
+			case 11: return this->YawRate;
+			default: return this->timeStamp;
+		}
+	}
+	//TODO: перегрузка умножения
+
 };
 #pragma pack(pop) // выравнивание в памяти
 

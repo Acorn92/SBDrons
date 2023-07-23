@@ -25,63 +25,67 @@ StateVector MathModelQuadrotor::calculateStateVector(StateVector &lastStateVecto
     StateVector funcRight = {0};
     StateVector funcRightFirstIntegral = {0};
     StateVector funcRightSecondIntegral = {0};
-    
+    for (int i = 0; i < SIZE_FUNCTION_RIGHT; i++)
+    {
+        funcRightFirstIntegral[i] = lastStateVector[(INDEX_VELOCITY_STATE + i)];
+        funcRightSecondIntegral[i] = lastStateVector[(INDEX_POSITION_STATE + i)];
+    }
 
-    //установка предыдущих значений скорости
-    funcRightFirstIntegral.VelX = lastStateVector.VelX;
-    funcRightFirstIntegral.VelY = lastStateVector.VelY;
-    funcRightFirstIntegral.VelZ = lastStateVector.VelZ;
+    // //установка предыдущих значений скорости
+    // funcRightFirstIntegral.VelX = lastStateVector.VelX;
+    // funcRightFirstIntegral.VelY = lastStateVector.VelY;
+    // funcRightFirstIntegral.VelZ = lastStateVector.VelZ;
 
-    funcRightFirstIntegral.PitchRate = lastStateVector.PitchRate;
-    funcRightFirstIntegral.RollRate = lastStateVector.RollRate;
-    funcRightFirstIntegral.YawRate = lastStateVector.YawRate;
+    // funcRightFirstIntegral.PitchRate = lastStateVector.PitchRate;
+    // funcRightFirstIntegral.RollRate = lastStateVector.RollRate;
+    // funcRightFirstIntegral.YawRate = lastStateVector.YawRate;
 
-    //установка предыдущих значений положений
-    funcRightSecondIntegral.X = lastStateVector.X;
-    funcRightSecondIntegral.Y = lastStateVector.Y;
-    funcRightSecondIntegral.Z = lastStateVector.Z;
+    // //установка предыдущих значений положений
+    // funcRightSecondIntegral.X = lastStateVector.X;
+    // funcRightSecondIntegral.Y = lastStateVector.Y;
+    // funcRightSecondIntegral.Z = lastStateVector.Z;
 
-    funcRightSecondIntegral.Pitch = lastStateVector.Pitch;
-    funcRightSecondIntegral.Roll = lastStateVector.Roll;
-    funcRightSecondIntegral.Yaw = lastStateVector.Yaw;
+    // funcRightSecondIntegral.Pitch = lastStateVector.Pitch;
+    // funcRightSecondIntegral.Roll = lastStateVector.Roll;
+    // funcRightSecondIntegral.Yaw = lastStateVector.Yaw;
    
     
-    funcRight = functionRight(lastStateVector, rotorsAngularVelocity);
+    // funcRight = functionRight(lastStateVector, rotorsAngularVelocity);
 
-    //получаем скорости
-    funcRightFirstIntegral.VelX += funcRight.VelX * paramsSimulator->dt;
-    funcRightFirstIntegral.VelY += funcRight.VelY * paramsSimulator->dt; 
-    funcRightFirstIntegral.VelZ += funcRight.VelZ * paramsSimulator->dt;  
+    // //получаем скорости
+    // funcRightFirstIntegral.VelX += funcRight.VelX * paramsSimulator->dt;
+    // funcRightFirstIntegral.VelY += funcRight.VelY * paramsSimulator->dt; 
+    // funcRightFirstIntegral.VelZ += funcRight.VelZ * paramsSimulator->dt;  
 
-    funcRightFirstIntegral.PitchRate += funcRight.PitchRate * paramsSimulator->dt;
-    funcRightFirstIntegral.RollRate += funcRight.RollRate * paramsSimulator->dt;
-    funcRightFirstIntegral.YawRate += funcRight.YawRate * paramsSimulator->dt;
+    // funcRightFirstIntegral.PitchRate += funcRight.PitchRate * paramsSimulator->dt;
+    // funcRightFirstIntegral.RollRate += funcRight.RollRate * paramsSimulator->dt;
+    // funcRightFirstIntegral.YawRate += funcRight.YawRate * paramsSimulator->dt;
 
-    //получаем положения
-    funcRightSecondIntegral.X += funcRightFirstIntegral.VelX * paramsSimulator->dt;
-    funcRightSecondIntegral.Y += funcRightFirstIntegral.VelY * paramsSimulator->dt;
-    funcRightSecondIntegral.Z += funcRightFirstIntegral.VelZ * paramsSimulator->dt;  
+    // //получаем положения
+    // funcRightSecondIntegral.X += funcRightFirstIntegral.VelX * paramsSimulator->dt;
+    // funcRightSecondIntegral.Y += funcRightFirstIntegral.VelY * paramsSimulator->dt;
+    // funcRightSecondIntegral.Z += funcRightFirstIntegral.VelZ * paramsSimulator->dt;  
 
-    funcRightSecondIntegral.Pitch += funcRightFirstIntegral.PitchRate * paramsSimulator->dt;
-    funcRightSecondIntegral.Roll += funcRightFirstIntegral.RollRate * paramsSimulator->dt;
-    funcRightSecondIntegral.Yaw+= funcRightFirstIntegral.YawRate * paramsSimulator->dt;  
+    // funcRightSecondIntegral.Pitch += funcRightFirstIntegral.PitchRate * paramsSimulator->dt;
+    // funcRightSecondIntegral.Roll += funcRightFirstIntegral.RollRate * paramsSimulator->dt;
+    // funcRightSecondIntegral.Yaw+= funcRightFirstIntegral.YawRate * paramsSimulator->dt;  
 
-    //заполняем результат
-    res.X = funcRightSecondIntegral.X;
-    res.Y = funcRightSecondIntegral.Y;
-    res.Z = funcRightSecondIntegral.Z;    
+    // //заполняем результат
+    // res.X = funcRightSecondIntegral.X;
+    // res.Y = funcRightSecondIntegral.Y;
+    // res.Z = funcRightSecondIntegral.Z;    
 
-    res.Pitch = funcRightSecondIntegral.Pitch;
-    res.Roll = funcRightSecondIntegral.Roll;
-    res.Yaw = funcRightSecondIntegral.Yaw;  
+    // res.Pitch = funcRightSecondIntegral.Pitch;
+    // res.Roll = funcRightSecondIntegral.Roll;
+    // res.Yaw = funcRightSecondIntegral.Yaw;  
 
-    res.VelX = funcRightFirstIntegral.VelX;
-    res.VelY = funcRightFirstIntegral.VelY;
-    res.VelZ = funcRightFirstIntegral.VelZ;    
+    // res.VelX = funcRightFirstIntegral.VelX;
+    // res.VelY = funcRightFirstIntegral.VelY;
+    // res.VelZ = funcRightFirstIntegral.VelZ;    
 
-    res.PitchRate = funcRightFirstIntegral.PitchRate;
-    res.RollRate = funcRightFirstIntegral.RollRate;
-    res.YawRate = funcRightFirstIntegral.YawRate;  
+    // res.PitchRate = funcRightFirstIntegral.PitchRate;
+    // res.RollRate = funcRightFirstIntegral.RollRate;
+    // res.YawRate = funcRightFirstIntegral.YawRate;  
     
     return (res);
 }
