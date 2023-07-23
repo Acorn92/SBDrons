@@ -20,8 +20,70 @@ MathModelQuadrotor::MathModelQuadrotor(const ParamsQuadrotor *paramsQuadrotor, c
  */
 StateVector MathModelQuadrotor::calculateStateVector(StateVector &lastStateVector, VectorXd_t rotorsAngularVelocity)
 {
-    StateVector res;
-    return res;
+    StateVector res = {0};
+
+    StateVector funcRight = {0};
+    StateVector funcRightFirstIntegral = {0};
+    StateVector funcRightSecondIntegral = {0};
+    
+
+    //установка предыдущих значений скорости
+    funcRightFirstIntegral.VelX = lastStateVector.VelX;
+    funcRightFirstIntegral.VelY = lastStateVector.VelY;
+    funcRightFirstIntegral.VelZ = lastStateVector.VelZ;
+
+    funcRightFirstIntegral.PitchRate = lastStateVector.PitchRate;
+    funcRightFirstIntegral.RollRate = lastStateVector.RollRate;
+    funcRightFirstIntegral.YawRate = lastStateVector.YawRate;
+
+    //установка предыдущих значений положений
+    funcRightSecondIntegral.X = lastStateVector.X;
+    funcRightSecondIntegral.Y = lastStateVector.Y;
+    funcRightSecondIntegral.Z = lastStateVector.Z;
+
+    funcRightSecondIntegral.Pitch = lastStateVector.Pitch;
+    funcRightSecondIntegral.Roll = lastStateVector.Roll;
+    funcRightSecondIntegral.Yaw = lastStateVector.Yaw;
+   
+    
+    funcRight = functionRight(lastStateVector, rotorsAngularVelocity);
+
+    //получаем скорости
+    funcRightFirstIntegral.VelX += funcRight.VelX * paramsSimulator->dt;
+    funcRightFirstIntegral.VelY += funcRight.VelY * paramsSimulator->dt; 
+    funcRightFirstIntegral.VelZ += funcRight.VelZ * paramsSimulator->dt;  
+
+    funcRightFirstIntegral.PitchRate += funcRight.PitchRate * paramsSimulator->dt;
+    funcRightFirstIntegral.RollRate += funcRight.RollRate * paramsSimulator->dt;
+    funcRightFirstIntegral.YawRate += funcRight.YawRate * paramsSimulator->dt;
+
+    //получаем положения
+    funcRightSecondIntegral.X += funcRightFirstIntegral.VelX * paramsSimulator->dt;
+    funcRightSecondIntegral.Y += funcRightFirstIntegral.VelY * paramsSimulator->dt;
+    funcRightSecondIntegral.Z += funcRightFirstIntegral.VelZ * paramsSimulator->dt;  
+
+    funcRightSecondIntegral.Pitch += funcRightFirstIntegral.PitchRate * paramsSimulator->dt;
+    funcRightSecondIntegral.Roll += funcRightFirstIntegral.RollRate * paramsSimulator->dt;
+    funcRightSecondIntegral.Yaw+= funcRightFirstIntegral.YawRate * paramsSimulator->dt;  
+
+    //заполняем результат
+    res.X = funcRightSecondIntegral.X;
+    res.Y = funcRightSecondIntegral.Y;
+    res.Z = funcRightSecondIntegral.Z;    
+
+    res.Pitch = funcRightSecondIntegral.Pitch;
+    res.Roll = funcRightSecondIntegral.Roll;
+    res.Yaw = funcRightSecondIntegral.Yaw;  
+
+    res.VelX = funcRightFirstIntegral.VelX;
+    res.VelY = funcRightFirstIntegral.VelY;
+    res.VelZ = funcRightFirstIntegral.VelZ;    
+
+    res.PitchRate = funcRightFirstIntegral.PitchRate;
+    res.RollRate = funcRightFirstIntegral.RollRate;
+    res.YawRate = funcRightFirstIntegral.YawRate;  
+    
+    return (res);
 }
 
 /**
@@ -36,8 +98,8 @@ StateVector	MathModelQuadrotor::functionRight(StateVector &lastStateVector, Vect
     * промежуточные значения для получения 
     * положения и скорости
     */
-    StateVector res;
-
+    // StateVector res;
+    StateVector res = {0};
     double sumRotorAngularVelocity = 0;//суммированные угловые скорости двигателей
     Eigen::Vector3d momentsThrustRotors;
     Eigen::Vector3d normalizeVector(0, 0, 1);
@@ -46,6 +108,7 @@ StateVector	MathModelQuadrotor::functionRight(StateVector &lastStateVector, Vect
     //получаем квадраты угловых скоростей роторов
     for (uint i = 0; i < paramsQuadrotor->numberOfRotors; i++)  
         squarAVR[i] = Math::squaring(angularVelocityRotors[i]);
+
     Eigen::Matrix3d inertialTensor;
     inertialTensor << paramsQuadrotor->Ixx, 0,                    0,
                                       0,                    paramsQuadrotor->Iyy, 0,
@@ -67,13 +130,14 @@ StateVector	MathModelQuadrotor::functionRight(StateVector &lastStateVector, Vect
     angularAcceleration = inertialTensor.inverse() * 
                           (momentsThrustRotors - angularVelocity.cross(inertialTensor * angularVelocity));
 
-    res.X = acceleration[0];
-    res.Y = acceleration[1];
-    res.Z = acceleration[2];
-    
-    res.VelX = angularAcceleration[0];
-    res.VelY = angularAcceleration[1];
-    res.VelZ = angularAcceleration[2];
+    //запишем значения ускорения 
+    res.VelX = acceleration[0];
+    res.VelY = acceleration[1];
+    res.VelZ = acceleration[2];
+    //запишем значение углового ускорения
+    res.PitchRate = angularAcceleration[0];
+    res.RollRate = angularAcceleration[1];
+    res.YawRate = angularAcceleration[3];;
 
     return res;
 }
@@ -83,7 +147,7 @@ Eigen::Vector3d MathModelQuadrotor::TestMatrRotation(StateVector &lastStateVecto
     Eigen::Vector3d res;
     Eigen::Vector3d testVector(1, 0, 0);
 
-    res = Math::rotationMatrix(lastStateVector.Roll, lastStateVector.Pitch, lastStateVector.Yaw)*
+    res = Math::rotationMatrix(lastStateVector.Roll, lastStateVector.Pitch, lastStateVector.Yaw).transpose()*
           testVector;  
     return res;
 }
