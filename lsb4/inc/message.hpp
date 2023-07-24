@@ -53,6 +53,43 @@ struct StateVector
 	}
 	//TODO: перегрузка умножения
 
+	StateVector &operator*(const double b)
+	{
+		StateVector res = *this;
+		res.X *= b;
+		res.Y *= b;
+		res.Z *= b;
+		res.Pitch *= b;
+		res.Roll *= b;
+		res.Yaw *= b;
+		res.VelX *= b;
+		res.VelY *= b;
+		res.VelZ *= b;
+		res.PitchRate *= b;
+		res.RollRate *= b;
+		res.YawRate *= b;
+		return res;
+	}
+
+	StateVector &operator+= (StateVector &a)
+	{
+		this->X += a.X;
+		this->X += a.Y;
+		this->Z += a.Z;
+		this->Pitch += a.Pitch;
+		this->Roll += a.Roll;
+		this->Yaw += a.Yaw;
+		this->VelX += a.VelX;
+		this->VelY += a.VelY;
+		this->VelZ += a.VelZ;
+		this->PitchRate += a.PitchRate;
+		this->RollRate += a.RollRate;
+		this->YawRate += a.YawRate;
+		this->timeStamp = a.timeStamp;
+		return *this;
+	}
+
+
 };
 #pragma pack(pop) // выравнивание в памяти
 

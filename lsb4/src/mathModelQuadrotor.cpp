@@ -31,6 +31,13 @@ StateVector MathModelQuadrotor::calculateStateVector(StateVector &lastStateVecto
         funcRightSecondIntegral[i] = lastStateVector[(INDEX_POSITION_STATE + i)];
     }
 
+    funcRight = functionRight(lastStateVector, rotorsAngularVelocity);
+
+    funcRightFirstIntegral += funcRight * paramsSimulator->dt;
+    funcRightSecondIntegral += funcRightFirstIntegral * paramsSimulator->dt;
+
+    //получаем скорости
+
     // //установка предыдущих значений скорости
     // funcRightFirstIntegral.VelX = lastStateVector.VelX;
     // funcRightFirstIntegral.VelY = lastStateVector.VelY;
@@ -50,7 +57,7 @@ StateVector MathModelQuadrotor::calculateStateVector(StateVector &lastStateVecto
     // funcRightSecondIntegral.Yaw = lastStateVector.Yaw;
    
     
-    // funcRight = functionRight(lastStateVector, rotorsAngularVelocity);
+    
 
     // //получаем скорости
     // funcRightFirstIntegral.VelX += funcRight.VelX * paramsSimulator->dt;
