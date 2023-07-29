@@ -5,6 +5,7 @@ MathModelQuadrotor::MathModelQuadrotor(const ParamsQuadrotor *paramsQuadrotor, c
     this->paramsQuadrotor = paramsQuadrotor;
 	this->paramsSimulator = paramsSimulator;
 	acceleration << 0, 0, 0;//начальные ускорения по каждой оси
+    acceleration2 << 0, 0, 0;//начальные ускорения по каждой оси
 	velocity  << 0, 0, 0;//начальные скорости по каждой оси
     position << 0, 0, 0;//начальное положение по каждой оси
     angularAcceleration << 0, 0, 0;//начальные угловые ускорения по каждой оси
@@ -138,6 +139,10 @@ StateVector	MathModelQuadrotor::functionRight(StateVector &lastStateVector, Vect
                     Math::rotationMatrix(lastStateVector.Pitch, lastStateVector.Roll, lastStateVector.Yaw) +
                     paramsQuadrotor->mass * (-GRAVITY_ACCELERATION * normalizeVector.transpose()) ) / paramsQuadrotor->mass;
 
+    acceleration2 = ((1/paramsQuadrotor->mass) * Math::rotationMatrix(lastStateVector.Pitch, lastStateVector.Roll, lastStateVector.Yaw)) * 
+                    (normalizeVector * (paramsQuadrotor->b * sumRotorAngularVelocity)) + (-GRAVITY_ACCELERATION * normalizeVector);
+    //проверили в калькуляторе ускорения - вроде ок
+    
     angularAcceleration = inertialTensor.inverse() * 
                           (momentsThrustRotors - angularVelocity.cross(inertialTensor * angularVelocity));
 
@@ -161,4 +166,20 @@ Eigen::Vector3d MathModelQuadrotor::TestMatrRotation(StateVector &lastStateVecto
     res = Math::rotationMatrix(lastStateVector.Roll, lastStateVector.Pitch, lastStateVector.Yaw).transpose()*
           testVector;  
     return res;
+}
+
+void MathModelQuadrotor::TestMathModel()
+{
+    VectorXd_t testRotorsAngularVelocity(4);
+    testRotorsAngularVelocity[0] = 0;
+    testRotorsAngularVelocity[1] = 0;
+    testRotorsAngularVelocity[2] = 1000;
+    testRotorsAngularVelocity[3] = 1000;
+
+    StateVector testStateVector = {0};
+    testStateVector.Pitch = 0;
+    testStateVector.Roll = 0;
+    testStateVector.Yaw = 0;
+
+    testStateVector = functionRight(testStateVector, testRotorsAngularVelocity);
 }

@@ -58,7 +58,9 @@ void Simulator::run()
 	    stateVector.Pitch = 0; 
 	    stateVector.Roll = 0;
 	    stateVector.Yaw = 1.5707963267948966;
-		mathModelQuadrotor->TestMatrRotation(stateVector);
+		// mathModelQuadrotor->TestMatrRotation(stateVector);
+		mathModelQuadrotor->TestMathModel();
+
 		// математической модели, выполнять интегрирование приращений и формирование вектора состояния
 		// Прим. Вектор состояния предлагается использовать в виде структуры(описание структуры в message.hpp)
 		

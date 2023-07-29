@@ -14,6 +14,7 @@ class MathModelQuadrotor
 		const ParamsQuadrotor	*paramsQuadrotor;
 		const ParamsSimulator	*paramsSimulator;
 		Eigen::Vector3d			acceleration;
+		Eigen::Vector3d			acceleration2;
 		Eigen::Vector3d			velocity;
 		Eigen::Vector3d			position;
 		Eigen::Vector3d			angularAcceleration;
@@ -22,6 +23,8 @@ class MathModelQuadrotor
 	public:	
 		StateVector		functionRight(StateVector &lastStateVector, VectorXd_t rotorsAngularVelocity);
 		Eigen::Vector3d TestMatrRotation(StateVector &lastStateVector);
+
+		void TestMathModel();
 };
 
 // размер вектора значений правой части

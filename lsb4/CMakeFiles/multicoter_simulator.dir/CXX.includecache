@@ -6,23 +6,9 @@
 
 #IncludeRegexTransform: 
 
-/home/ac/Projects/SkillboxDrons/lsb4/src/UAVControlSystem.cpp
-UAVControlSystem.hpp
-/home/ac/Projects/SkillboxDrons/lsb4/src/UAVControlSystem.hpp
-iostream
--
-
 /home/ac/Projects/SkillboxDrons/lsb4/src/mathModelQuadrotor.cpp
 mathModelQuadrotor.hpp
 /home/ac/Projects/SkillboxDrons/lsb4/src/mathModelQuadrotor.hpp
-
-/home/ac/Projects/SkillboxDrons/lsb4/src/motionPlanner.cpp
-motionPlanner.hpp
-/home/ac/Projects/SkillboxDrons/lsb4/src/motionPlanner.hpp
-
-/home/ac/Projects/SkillboxDrons/lsb4/src/simulator.cpp
-simulator.hpp
-/home/ac/Projects/SkillboxDrons/lsb4/src/simulator.hpp
 
 /usr/include/eigen3/Eigen/Cholesky
 Core
@@ -1070,16 +1056,6 @@ lapacke_mangling.h
 
 /usr/include/eigen3/Eigen/src/plugins/MatrixCwiseUnaryOps.h
 
-inc/UAVControlSystem.hpp
-typesData.hpp
-inc/typesData.hpp
-math.hpp
-inc/math.hpp
-motionPlanner.hpp
-inc/motionPlanner.hpp
-cmath
--
-
 inc/math.hpp
 Eigen/Dense
 -
@@ -1095,38 +1071,6 @@ message.hpp
 -
 
 inc/message.hpp
-
-inc/motionPlanner.hpp
-typesData.hpp
--
-math.hpp
--
-message.hpp
--
-
-inc/simulator.hpp
-typesData.hpp
--
-sys/socket.h
--
-arpa/inet.h
--
-iostream
--
-string
--
-mathModelQuadrotor.hpp
--
-UAVControlSystem.hpp
--
-message.hpp
--
-math.hpp
--
-unistd.h
--
-chrono
--
 
 inc/typesData.hpp
 Eigen/Dense
