@@ -18,6 +18,7 @@ class MathModelQuadrotor
 		Eigen::Vector3d			velocity;
 		Eigen::Vector3d			position;
 		Eigen::Vector3d			angularAcceleration;
+		Eigen::Vector3d			angularAcceleration2;
 		Eigen::Vector3d			angularVelocity;
 		Eigen::Vector3d			orientation;
 	public:	

@@ -53,39 +53,58 @@ struct StateVector
 	}
 	//TODO: перегрузка умножения
 
-	StateVector &operator*(const double b)
+	StateVector &operator*(const double &b)
 	{
-		StateVector res = *this;
-		res.X *= b;
-		res.Y *= b;
-		res.Z *= b;
-		res.Pitch *= b;
-		res.Roll *= b;
-		res.Yaw *= b;
-		res.VelX *= b;
-		res.VelY *= b;
-		res.VelZ *= b;
-		res.PitchRate *= b;
-		res.RollRate *= b;
-		res.YawRate *= b;
-		return res;
+		X *= b;
+		Y *= b;
+		Z *= b;
+		Pitch *= b;
+		Roll *= b;
+		Yaw *= b;
+		VelX *= b;
+		VelY *= b;
+		VelZ *= b;
+		PitchRate *= b;
+		RollRate *= b;
+		YawRate *= b;
+		return *this;
 	}
 
-	StateVector &operator+= (StateVector &a)
+	StateVector &operator= (const StateVector &a)
 	{
-		this->X += a.X;
-		this->X += a.Y;
-		this->Z += a.Z;
-		this->Pitch += a.Pitch;
-		this->Roll += a.Roll;
-		this->Yaw += a.Yaw;
-		this->VelX += a.VelX;
-		this->VelY += a.VelY;
-		this->VelZ += a.VelZ;
-		this->PitchRate += a.PitchRate;
-		this->RollRate += a.RollRate;
-		this->YawRate += a.YawRate;
-		this->timeStamp = a.timeStamp;
+		X = a.X;
+		Y = a.Y;
+		Z = a.Z;
+		Pitch = a.Pitch;
+		Roll += a.Roll;
+		Yaw += a.Yaw;
+		VelX += a.VelX;
+		VelY += a.VelY;
+		VelZ += a.VelZ;
+		PitchRate += a.PitchRate;
+		RollRate += a.RollRate;
+		YawRate += a.YawRate;
+		timeStamp = a.timeStamp;
+		return *this;
+	}
+
+
+	StateVector &operator+= (const StateVector &a)
+	{
+		
+		X += a.X;
+		X += a.Y;
+		Z += a.Z;
+		Pitch += a.Pitch;
+		Roll += a.Roll;
+		Yaw += a.Yaw;
+		VelX += a.VelX;
+		VelY += a.VelY;
+		VelZ += a.VelZ;
+		PitchRate += a.PitchRate;
+		RollRate += a.RollRate;
+		YawRate += a.YawRate;
+		timeStamp = a.timeStamp;
 		return *this;
 	}
 
