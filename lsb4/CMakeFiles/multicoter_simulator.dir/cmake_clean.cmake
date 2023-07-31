@@ -1,6 +1,7 @@
 file(REMOVE_RECURSE
   "CMakeFiles/multicoter_simulator.dir/src/UAVControlSystem.cpp.o"
   "CMakeFiles/multicoter_simulator.dir/src/configLoader.cpp.o"
+  "CMakeFiles/multicoter_simulator.dir/src/graphicsDrawer.cpp.o"
   "CMakeFiles/multicoter_simulator.dir/src/math.cpp.o"
   "CMakeFiles/multicoter_simulator.dir/src/mathModelQuadrotor.cpp.o"
   "CMakeFiles/multicoter_simulator.dir/src/motionPlanner.cpp.o"

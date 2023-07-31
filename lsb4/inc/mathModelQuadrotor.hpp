@@ -5,6 +5,7 @@
 #include <math.hpp>
 #include <message.hpp>
 
+
 class MathModelQuadrotor
 {
 	public:

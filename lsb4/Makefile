@@ -190,6 +190,33 @@ src/configLoader.cpp.s:
 	$(MAKE) -f CMakeFiles/multicoter_simulator.dir/build.make CMakeFiles/multicoter_simulator.dir/src/configLoader.cpp.s
 .PHONY : src/configLoader.cpp.s
 
+src/graphicsDrawer.o: src/graphicsDrawer.cpp.o
+
+.PHONY : src/graphicsDrawer.o
+
+# target to build an object file
+src/graphicsDrawer.cpp.o:
+	$(MAKE) -f CMakeFiles/multicoter_simulator.dir/build.make CMakeFiles/multicoter_simulator.dir/src/graphicsDrawer.cpp.o
+.PHONY : src/graphicsDrawer.cpp.o
+
+src/graphicsDrawer.i: src/graphicsDrawer.cpp.i
+
+.PHONY : src/graphicsDrawer.i
+
+# target to preprocess a source file
+src/graphicsDrawer.cpp.i:
+	$(MAKE) -f CMakeFiles/multicoter_simulator.dir/build.make CMakeFiles/multicoter_simulator.dir/src/graphicsDrawer.cpp.i
+.PHONY : src/graphicsDrawer.cpp.i
+
+src/graphicsDrawer.s: src/graphicsDrawer.cpp.s
+
+.PHONY : src/graphicsDrawer.s
+
+# target to generate assembly for a file
+src/graphicsDrawer.cpp.s:
+	$(MAKE) -f CMakeFiles/multicoter_simulator.dir/build.make CMakeFiles/multicoter_simulator.dir/src/graphicsDrawer.cpp.s
+.PHONY : src/graphicsDrawer.cpp.s
+
 src/main.o: src/main.cpp.o
 
 .PHONY : src/main.o
@@ -341,6 +368,9 @@ help:
 	@echo "... src/configLoader.o"
 	@echo "... src/configLoader.i"
 	@echo "... src/configLoader.s"
+	@echo "... src/graphicsDrawer.o"
+	@echo "... src/graphicsDrawer.i"
+	@echo "... src/graphicsDrawer.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"

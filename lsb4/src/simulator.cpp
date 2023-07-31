@@ -86,10 +86,10 @@ void Simulator::run()
 		// // устанавливаем метку времени
 		// stateVector.timeStamp = t;
 		// Отправляем вектор состояния
-		sendMessage(stateVector);
+		//sendMessage(stateVector);
 		// Для простейшей имитации движения аппарата в реальном времени 
 		// можно вызывать задержку или воспользоваться прерываниями
-		usleep(paramsSimulator.dt * 1e6);
+		//usleep(paramsSimulator.dt * 1e6);
 	}
 }
 

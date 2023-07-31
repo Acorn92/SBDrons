@@ -426,6 +426,9 @@ CMakeFiles/multicoter_simulator.dir/src/configLoader.cpp.o
  /usr/include/eigen3/Eigen/src/plugins/MatrixCwiseUnaryOps.h
  inc/configLoader.hpp
  inc/typesData.hpp
+CMakeFiles/multicoter_simulator.dir/src/graphicsDrawer.cpp.o
+ /home/ac/Projects/SkillboxDrons/lsb4/src/graphicsDrawer.cpp
+ inc/graphicsDrawer.hpp
 CMakeFiles/multicoter_simulator.dir/src/math.cpp.o
  /home/ac/Projects/SkillboxDrons/lsb4/src/math.cpp
  /usr/include/eigen3/Eigen/Cholesky
@@ -846,6 +849,7 @@ CMakeFiles/multicoter_simulator.dir/src/mathModelQuadrotor.cpp.o
  /usr/include/eigen3/Eigen/src/plugins/CommonCwiseUnaryOps.h
  /usr/include/eigen3/Eigen/src/plugins/MatrixCwiseBinaryOps.h
  /usr/include/eigen3/Eigen/src/plugins/MatrixCwiseUnaryOps.h
+ inc/graphicsDrawer.hpp
  inc/math.hpp
  inc/mathModelQuadrotor.hpp
  inc/message.hpp

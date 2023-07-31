@@ -11,6 +11,7 @@ set(CMAKE_CXX_FLAGS "${COMMON_FLAGS}")
 find_package (Eigen3  REQUIRED)
 find_package (Threads)
 
+
 # устанавливаем пути к заголовочным файлам
 include_directories(
 		inc
@@ -25,6 +26,7 @@ set(SIM_CPP_FILES
 	src/math.cpp
 	src/configLoader.cpp
 	src/motionPlanner.cpp
+	src/graphicsDrawer.cpp
 )
 
 set(CMAKE_BUILD_TYPE Debug)
@@ -33,4 +35,4 @@ add_library(multicoter_simulator STATIC ${SIM_CPP_FILES})
 # Добавляем исполняемый файл
 add_executable(main src/main.cpp)
 # Выполняем подключение библиотек к исполняемому файлу
-target_link_libraries(main multicoter_simulator yaml-cpp ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(main multicoter_simulator yaml-cpp -lsfml-graphics -lsfml-window -lsfml-system ${CMAKE_THREAD_LIBS_INIT})

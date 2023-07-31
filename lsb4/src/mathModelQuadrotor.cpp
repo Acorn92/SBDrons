@@ -1,4 +1,5 @@
 #include "mathModelQuadrotor.hpp"
+#include "graphicsDrawer.hpp"
 
 MathModelQuadrotor::MathModelQuadrotor(const ParamsQuadrotor *paramsQuadrotor, const ParamsSimulator *paramsSimulator)
 {
@@ -35,18 +36,11 @@ StateVector MathModelQuadrotor::calculateStateVector(StateVector &lastStateVecto
     }
 
     funcRight = functionRight(lastStateVector, rotorsAngularVelocity);
-    funcRightDt = funcRight * paramsSimulator->dt;
-    funcRightFirstIntegral += funcRightDt;
-    // funcRightSecondIntegral += funcRightFirstIntegral * paramsSimulator->dt;    
 
-    // //получаем скорости
-    // funcRightFirstIntegral.VelX += funcRight.VelX * paramsSimulator->dt;
-    // funcRightFirstIntegral.VelY += funcRight.VelY * paramsSimulator->dt; 
-    // funcRightFirstIntegral.VelZ += funcRight.VelZ * paramsSimulator->dt;  
+    //получаем скорости
+    funcRightFirstIntegral += funcRight * paramsSimulator->dt;
 
-    // funcRightFirstIntegral.PitchRate += funcRight.PitchRate * paramsSimulator->dt;
-    // funcRightFirstIntegral.RollRate += funcRight.RollRate * paramsSimulator->dt;
-    // funcRightFirstIntegral.YawRate += funcRight.YawRate * paramsSimulator->dt;
+    // funcRightSecondIntegral += funcRightFirstIntegral * paramsSimulator->dt;  
 
     //получаем положения
     funcRightSecondIntegral.X += funcRightFirstIntegral.VelX * paramsSimulator->dt;
@@ -58,6 +52,7 @@ StateVector MathModelQuadrotor::calculateStateVector(StateVector &lastStateVecto
     funcRightSecondIntegral.Yaw+= funcRightFirstIntegral.YawRate * paramsSimulator->dt;  
 
     //заполняем результат
+    //TODO: переписать в цикле
     res.X = funcRightSecondIntegral.X;
     res.Y = funcRightSecondIntegral.Y;
     res.Z = funcRightSecondIntegral.Z;    
@@ -73,6 +68,7 @@ StateVector MathModelQuadrotor::calculateStateVector(StateVector &lastStateVecto
     res.PitchRate = funcRightFirstIntegral.PitchRate;
     res.RollRate = funcRightFirstIntegral.RollRate;
     res.YawRate = funcRightFirstIntegral.YawRate;  
+    //TODO - проеврить правильность интегратора
     
     return (res);
 }
@@ -178,4 +174,7 @@ void MathModelQuadrotor::TestMathModel()
     testStateVector.YawRate = 0;
 
     testStateVector = calculateStateVector(testStateVector, testRotorsAngularVelocity);
+
+    Graphic gr(500, 500);
+    gr.drawPoints();
 }
