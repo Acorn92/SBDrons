@@ -1,4 +1,5 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/multicoter_simulator.dir/src/PID.cpp.o"
   "CMakeFiles/multicoter_simulator.dir/src/UAVControlSystem.cpp.o"
   "CMakeFiles/multicoter_simulator.dir/src/configLoader.cpp.o"
   "CMakeFiles/multicoter_simulator.dir/src/graphicsDrawer.cpp.o"

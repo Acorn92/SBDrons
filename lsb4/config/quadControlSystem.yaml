@@ -1,17 +1,17 @@
 # Файл конфигурации системы управления
 
 # Коэффициенты ПИД регулятора угловой скорости по оси X
-KpXAngularRate: 0
-KiXAngularRate: 0
-KdXAngularRate: 0
+KpXAngularRate: 1
+KiXAngularRate: 2
+KdXAngularRate: 3
 # Коэффициенты ПИД регулятора угловой скорости по оси Y
-KpYAngularRate: 0
-KiYAngularRate: 0
-KdYAngularRate: 0
+KpYAngularRate: 4
+KiYAngularRate: 5
+KdYAngularRate: 6
 # Коэффициенты ПИД регулятора угловой скорости по оси Z
-KpZAngularRate: 0
-KiZAngularRate: 0
-KdZAngularRate: 0
+KpZAngularRate: 7
+KiZAngularRate: 8
+KdZAngularRate: 9
 # Коэффициенты ПИД регулятора углового положения по оси X
 KpXAngle: 0
 KiXAngle: 0

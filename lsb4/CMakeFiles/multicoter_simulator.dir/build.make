@@ -148,6 +148,19 @@ CMakeFiles/multicoter_simulator.dir/src/graphicsDrawer.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/multicoter_simulator.dir/src/graphicsDrawer.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ac/Projects/SkillboxDrons/lsb4/src/graphicsDrawer.cpp -o CMakeFiles/multicoter_simulator.dir/src/graphicsDrawer.cpp.s
 
+CMakeFiles/multicoter_simulator.dir/src/PID.cpp.o: CMakeFiles/multicoter_simulator.dir/flags.make
+CMakeFiles/multicoter_simulator.dir/src/PID.cpp.o: src/PID.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ac/Projects/SkillboxDrons/lsb4/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/multicoter_simulator.dir/src/PID.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/multicoter_simulator.dir/src/PID.cpp.o -c /home/ac/Projects/SkillboxDrons/lsb4/src/PID.cpp
+
+CMakeFiles/multicoter_simulator.dir/src/PID.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/multicoter_simulator.dir/src/PID.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ac/Projects/SkillboxDrons/lsb4/src/PID.cpp > CMakeFiles/multicoter_simulator.dir/src/PID.cpp.i
+
+CMakeFiles/multicoter_simulator.dir/src/PID.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/multicoter_simulator.dir/src/PID.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ac/Projects/SkillboxDrons/lsb4/src/PID.cpp -o CMakeFiles/multicoter_simulator.dir/src/PID.cpp.s
+
 # Object files for target multicoter_simulator
 multicoter_simulator_OBJECTS = \
 "CMakeFiles/multicoter_simulator.dir/src/mathModelQuadrotor.cpp.o" \
@@ -156,7 +169,8 @@ multicoter_simulator_OBJECTS = \
 "CMakeFiles/multicoter_simulator.dir/src/math.cpp.o" \
 "CMakeFiles/multicoter_simulator.dir/src/configLoader.cpp.o" \
 "CMakeFiles/multicoter_simulator.dir/src/motionPlanner.cpp.o" \
-"CMakeFiles/multicoter_simulator.dir/src/graphicsDrawer.cpp.o"
+"CMakeFiles/multicoter_simulator.dir/src/graphicsDrawer.cpp.o" \
+"CMakeFiles/multicoter_simulator.dir/src/PID.cpp.o"
 
 # External object files for target multicoter_simulator
 multicoter_simulator_EXTERNAL_OBJECTS =
@@ -168,9 +182,10 @@ libmulticoter_simulator.a: CMakeFiles/multicoter_simulator.dir/src/math.cpp.o
 libmulticoter_simulator.a: CMakeFiles/multicoter_simulator.dir/src/configLoader.cpp.o
 libmulticoter_simulator.a: CMakeFiles/multicoter_simulator.dir/src/motionPlanner.cpp.o
 libmulticoter_simulator.a: CMakeFiles/multicoter_simulator.dir/src/graphicsDrawer.cpp.o
+libmulticoter_simulator.a: CMakeFiles/multicoter_simulator.dir/src/PID.cpp.o
 libmulticoter_simulator.a: CMakeFiles/multicoter_simulator.dir/build.make
 libmulticoter_simulator.a: CMakeFiles/multicoter_simulator.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/ac/Projects/SkillboxDrons/lsb4/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Linking CXX static library libmulticoter_simulator.a"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/ac/Projects/SkillboxDrons/lsb4/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Linking CXX static library libmulticoter_simulator.a"
 	$(CMAKE_COMMAND) -P CMakeFiles/multicoter_simulator.dir/cmake_clean_target.cmake
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/multicoter_simulator.dir/link.txt --verbose=$(VERBOSE)
 

@@ -16,13 +16,13 @@ Graphic::Graphic(int W, int H)
 }
 
 void Graphic::Run() {
-    // while (window->isOpen()) {
-    //     sf::Event event;
-    //     while (window->pollEvent(event)) {
-    //         if (event.type == sf::Event::Closed)
-    //                         window->close();
-    //     }
-    // }
+    while (window->isOpen()) {
+        sf::Event event;
+        while (window->pollEvent(event)) {
+            if (event.type == sf::Event::Closed)
+                            window->close();
+        }
+    }
     window->clear(sf::Color::White);
     window->display();
     
@@ -35,24 +35,8 @@ Graphic::~Graphic() {
 
 void Graphic::drawPoints(StateVector data)
 {
-    // RenderWindow window1(VideoMode(this->weigth, this->heigth), "Grap!");
-
-    // while (window->isOpen())
-    // {
-    //     Event event;
-    //     while (window->pollEvent(event))
-    //     {
-    //         if (event.type == Event::Closed)
-    //                 window->close();
-    //     }
-
-        
-        
-        
-    // }
     CircleShape point(5.f);
     point.setFillColor(Color::Blue);
     point.setPosition(this->y0 + data.Z, this->x0 + data.timeStamp);
     window->draw(point);
-    window->display();
 }

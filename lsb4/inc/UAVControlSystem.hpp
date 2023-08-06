@@ -4,7 +4,19 @@
 #include "typesData.hpp"
 #include "math.hpp"
 #include "motionPlanner.hpp"
+#include "PID.hpp"
 #include <cmath>
+
+class PID_Circuit
+{
+	public:
+		PID_Circuit(const Eigen::Vector3d Kp, const Eigen::Vector3d Ki, const Eigen::Vector3d Kd);
+	private:
+		PID *circuit;
+		int countCircuit;	
+};
+
+
 
 class UAVControlSystem
 {
@@ -69,7 +81,7 @@ class UAVControlSystem
 		void				PIDThrust();
 		void				PIDPosition();
 		void				PIDAngles();
-		void				PIDAngularRate();
+		void				PIDAngularRate(const ParamsControlSystem *paramsControlSystem);
 		bool				checkRadius(VectorXd_t targetPoints);
 		void				saturation(double &arg, double min, double max);
 		double				commandThrustToOmegaRotors(double commandThrust);

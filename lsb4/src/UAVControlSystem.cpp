@@ -5,9 +5,22 @@
 	#include <iostream>
 #endif
 
+PID_Circuit::PID_Circuit (const Eigen::Vector3d Kp, const Eigen::Vector3d Ki, const Eigen::Vector3d Kd)
+{		
+	circuit = new PID[3];
+	for (int i = 0; i < 3; i++)
+		circuit[i] = PID(Kp[i], 
+						 Ki[i], 
+					 	 Kd[i]);
+}
+
 UAVControlSystem::UAVControlSystem(const ParamsControlSystem *paramsControlSystem, const ParamsSimulator *paramsSimulator,
 								   const ParamsQuadrotor *paramsQuadrotor, MotionPlanner* pathPlaner)
-{
+{	
+	PID_Circuit velocity(paramsControlSystem->KpAngularRate, paramsControlSystem->KiAngularRate, paramsControlSystem->KdAngularRate);	
+	PID_Circuit angle(paramsControlSystem->KpAngularRate, paramsControlSystem->KiAngularRate, paramsControlSystem->KdAngularRate);
+	PID_Circuit position(paramsControlSystem->KpAngularRate, paramsControlSystem->KiAngularRate, paramsControlSystem->KdAngularRate);
+	//TODO: продолжить разработку системы управления. таймкод вебинара: 31:40
 }
 
 /**
@@ -29,6 +42,7 @@ VectorXd_t	UAVControlSystem::calculateMotorVelocity(VectorXd_t stateVector, Matr
  */
 VectorXd_t	UAVControlSystem::mixer()
 {
+
 }
 
 /**
@@ -69,7 +83,7 @@ void		UAVControlSystem::PIDAngles()
  * @brief ПИД по угловой скорости
  * 
  */
-void		UAVControlSystem::PIDAngularRate()
+void UAVControlSystem::PIDAngularRate(const ParamsControlSystem *paramsControlSystem)
 {
 }
 

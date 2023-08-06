@@ -136,6 +136,33 @@ multicoter_simulator/fast:
 	$(MAKE) -f CMakeFiles/multicoter_simulator.dir/build.make CMakeFiles/multicoter_simulator.dir/build
 .PHONY : multicoter_simulator/fast
 
+src/PID.o: src/PID.cpp.o
+
+.PHONY : src/PID.o
+
+# target to build an object file
+src/PID.cpp.o:
+	$(MAKE) -f CMakeFiles/multicoter_simulator.dir/build.make CMakeFiles/multicoter_simulator.dir/src/PID.cpp.o
+.PHONY : src/PID.cpp.o
+
+src/PID.i: src/PID.cpp.i
+
+.PHONY : src/PID.i
+
+# target to preprocess a source file
+src/PID.cpp.i:
+	$(MAKE) -f CMakeFiles/multicoter_simulator.dir/build.make CMakeFiles/multicoter_simulator.dir/src/PID.cpp.i
+.PHONY : src/PID.cpp.i
+
+src/PID.s: src/PID.cpp.s
+
+.PHONY : src/PID.s
+
+# target to generate assembly for a file
+src/PID.cpp.s:
+	$(MAKE) -f CMakeFiles/multicoter_simulator.dir/build.make CMakeFiles/multicoter_simulator.dir/src/PID.cpp.s
+.PHONY : src/PID.cpp.s
+
 src/UAVControlSystem.o: src/UAVControlSystem.cpp.o
 
 .PHONY : src/UAVControlSystem.o
@@ -362,6 +389,9 @@ help:
 	@echo "... main"
 	@echo "... rebuild_cache"
 	@echo "... multicoter_simulator"
+	@echo "... src/PID.o"
+	@echo "... src/PID.i"
+	@echo "... src/PID.s"
 	@echo "... src/UAVControlSystem.o"
 	@echo "... src/UAVControlSystem.i"
 	@echo "... src/UAVControlSystem.s"

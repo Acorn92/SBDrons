@@ -27,6 +27,7 @@ set(SIM_CPP_FILES
 	src/configLoader.cpp
 	src/motionPlanner.cpp
 	src/graphicsDrawer.cpp
+	src/PID.cpp
 )
 
 set(CMAKE_BUILD_TYPE Debug)

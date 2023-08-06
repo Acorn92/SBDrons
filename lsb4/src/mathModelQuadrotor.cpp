@@ -7,11 +7,9 @@ MathModelQuadrotor::MathModelQuadrotor(const ParamsQuadrotor *paramsQuadrotor, c
     this->paramsQuadrotor = paramsQuadrotor;
 	this->paramsSimulator = paramsSimulator;
 	acceleration << 0, 0, 0;//начальные ускорения по каждой оси
-    acceleration2 << 0, 0, 0;//начальные ускорения по каждой оси
 	velocity  << 0, 0, 0;//начальные скорости по каждой оси
     position << 0, 0, 0;//начальное положение по каждой оси
     angularAcceleration << 0, 0, 0;//начальные угловые ускорения по каждой оси
-    angularAcceleration2 << 0, 0, 0;//начальные угловые ускорения по каждой оси
     angularVelocity << 0, 0, 0;//начальные угловые скорости по каждой оси
     orientation << 0, 0, 0;//начальные угловые положения по каждой оси
 }
@@ -115,8 +113,7 @@ StateVector	MathModelQuadrotor::functionRight(StateVector &lastStateVector, Vect
                     Math::rotationMatrix(lastStateVector.Pitch, lastStateVector.Roll, lastStateVector.Yaw) +
                     paramsQuadrotor->mass * (-GRAVITY_ACCELERATION * normalizeVector.transpose()) ) / paramsQuadrotor->mass;
 
-    acceleration2 = (((1/paramsQuadrotor->mass) * Math::rotationMatrix(lastStateVector.Pitch, lastStateVector.Roll, lastStateVector.Yaw)) * 
-                    (normalizeVector * (paramsQuadrotor->b * sumRotorAngularVelocity))) + (-GRAVITY_ACCELERATION * normalizeVector);
+   
     //проверили в калькуляторе ускорения - вроде ок
     // результат до деления на массу : (0, 0, -0.5383) / 0.0630 = (0, 0, -8.54444444), что совпадает
     // переписывание формулы в соотв с инстркцией, без преобразований даёт похожий результат

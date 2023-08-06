@@ -9,6 +9,9 @@
  */
 void			MotionPlanner::calculateTrajectory(StateVector stateVector, MatrixXd_t targetPoints, VectorXd_t timeTrajectory)
 {
+	int countPoints = getSizeTimeTrajectory();
+
+	MatrixXd_t A(6, 6);
 }
 
 VectorXd_t		MotionPlanner::getRowsCoeffX(unsigned int indexRows)

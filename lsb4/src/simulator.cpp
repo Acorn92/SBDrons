@@ -48,7 +48,7 @@ void Simulator::run()
 	// Положение ЛА в стартовой СК
 	    stateVector.X = 0; 
 	    stateVector.Y = 0;
-	    stateVector.Z = 3;
+	    stateVector.Z = 0;
 	    // Скорость ЛА в стартовой СК
 	    stateVector.VelX = 0;
 	    stateVector.VelY = 0;
@@ -77,10 +77,10 @@ void Simulator::run()
 		
 		// mathModelQuadrotor->TestMatrRotation(stateVector);
 		VectorXd_t testRotorsAngularVelocity(4);
-		testRotorsAngularVelocity[0] = 100;
-		testRotorsAngularVelocity[1] = 100;
-		testRotorsAngularVelocity[2] = 100;
-		testRotorsAngularVelocity[3] = 100;
+		testRotorsAngularVelocity[0] = 2600;
+		testRotorsAngularVelocity[1] = 2598;
+		testRotorsAngularVelocity[2] = 2600;
+		testRotorsAngularVelocity[3] = 2602;
 		stateVector = mathModelQuadrotor->TestMathModel(stateVector, testRotorsAngularVelocity);
 
 		// математической модели, выполнять интегрирование приращений и формирование вектора состояния

@@ -16,11 +16,9 @@ class MathModelQuadrotor
 		const ParamsQuadrotor	*paramsQuadrotor;
 		const ParamsSimulator	*paramsSimulator;
 		Eigen::Vector3d			acceleration;
-		Eigen::Vector3d			acceleration2;
 		Eigen::Vector3d			velocity;
 		Eigen::Vector3d			position;
 		Eigen::Vector3d			angularAcceleration;
-		Eigen::Vector3d			angularAcceleration2;
 		Eigen::Vector3d			angularVelocity;
 		Eigen::Vector3d			orientation;
 	public:	

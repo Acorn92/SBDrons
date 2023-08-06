@@ -1064,6 +1064,8 @@ lapacke_mangling.h
 
 /usr/include/eigen3/Eigen/src/plugins/MatrixCwiseUnaryOps.h
 
+inc/PID.hpp
+
 inc/UAVControlSystem.hpp
 typesData.hpp
 inc/typesData.hpp
@@ -1071,6 +1073,8 @@ math.hpp
 inc/math.hpp
 motionPlanner.hpp
 inc/motionPlanner.hpp
+PID.hpp
+inc/PID.hpp
 cmath
 -
 
