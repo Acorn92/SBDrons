@@ -45,9 +45,28 @@ Simulator::~Simulator()
  */
 void Simulator::run()
 {
+	// Положение ЛА в стартовой СК
+	    stateVector.X = 0; 
+	    stateVector.Y = 0;
+	    stateVector.Z = 3;
+	    // Скорость ЛА в стартовой СК
+	    stateVector.VelX = 0;
+	    stateVector.VelY = 0;
+	    stateVector.VelZ = 0;
+	    // Угловое положение ЛА
+	    stateVector.Pitch = 0;
+	    stateVector.Roll = 0;
+	    stateVector.Yaw = 0;
+	    // Угловая скорость ЛА
+	    stateVector.PitchRate = 0;
+	    stateVector.RollRate = 0;
+	    stateVector.YawRate = 0;
+		// устанавливаем метку времени
+		
 	// Выполняем моделирование системы в цикле
 	for (double t = 0; t < paramsSimulator.simulationTotalTime; t += paramsSimulator.dt)
 	{
+		stateVector.timeStamp = t;
 		// тут необходимо вызывать методы для получения комманд управления
 		// тут необходимо вызывать методы для вычисления функции правых частей
 		// VectorXd_t angularVelocityRotors(4);
@@ -55,11 +74,14 @@ void Simulator::run()
 		// angularVelocityRotors << 1000, 1000, 1000, 1000;
 		// stateVector = mathModelQuadrotor->functionRight(stateVector, angularVelocityRotors);
 
-	    stateVector.Pitch = 0; 
-	    stateVector.Roll = 0;
-	    stateVector.Yaw = 1.5707963267948966;
+		
 		// mathModelQuadrotor->TestMatrRotation(stateVector);
-		mathModelQuadrotor->TestMathModel();
+		VectorXd_t testRotorsAngularVelocity(4);
+		testRotorsAngularVelocity[0] = 100;
+		testRotorsAngularVelocity[1] = 100;
+		testRotorsAngularVelocity[2] = 100;
+		testRotorsAngularVelocity[3] = 100;
+		stateVector = mathModelQuadrotor->TestMathModel(stateVector, testRotorsAngularVelocity);
 
 		// математической модели, выполнять интегрирование приращений и формирование вектора состояния
 		// Прим. Вектор состояния предлагается использовать в виде структуры(описание структуры в message.hpp)
@@ -67,29 +89,12 @@ void Simulator::run()
 		// Пример заполнения вектора состояния
 		// Вектор состояния в результате должен формироваться по результатам интегрирования приращений
 		// математической модели(интегрирования линейных и угловых ускорений)
-		// Положение ЛА в стартовой СК
-	    // stateVector.X = 0; 
-	    // stateVector.Y = 0;
-	    // stateVector.Z = 3;
-	    // // Скорость ЛА в стартовой СК
-	    // stateVector.VelX = 0;
-	    // stateVector.VelY = 0;
-	    // stateVector.VelZ = 0;
-	    // // Угловое положение ЛА
-	    // stateVector.Pitch = 0;
-	    // stateVector.Roll = 0;
-	    // stateVector.Yaw = 0;
-	    // // Угловая скорость ЛА
-	    // stateVector.PitchRate = 0;
-	    // stateVector.RollRate = 0;
-	    // stateVector.YawRate = 0;
-		// // устанавливаем метку времени
-		// stateVector.timeStamp = t;
+	
 		// Отправляем вектор состояния
-		//sendMessage(stateVector);
+		sendMessage(stateVector);
 		// Для простейшей имитации движения аппарата в реальном времени 
 		// можно вызывать задержку или воспользоваться прерываниями
-		//usleep(paramsSimulator.dt * 1e6);
+		usleep(paramsSimulator.dt * 1e6);
 	}
 }
 

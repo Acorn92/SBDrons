@@ -1,5 +1,6 @@
 #include "mathModelQuadrotor.hpp"
-#include "graphicsDrawer.hpp"
+#include <iostream>
+
 
 MathModelQuadrotor::MathModelQuadrotor(const ParamsQuadrotor *paramsQuadrotor, const ParamsSimulator *paramsSimulator)
 {
@@ -49,7 +50,7 @@ StateVector MathModelQuadrotor::calculateStateVector(StateVector &lastStateVecto
 
     funcRightSecondIntegral.Pitch += funcRightFirstIntegral.PitchRate * paramsSimulator->dt;
     funcRightSecondIntegral.Roll += funcRightFirstIntegral.RollRate * paramsSimulator->dt;
-    funcRightSecondIntegral.Yaw+= funcRightFirstIntegral.YawRate * paramsSimulator->dt;  
+    funcRightSecondIntegral.Yaw += funcRightFirstIntegral.YawRate * paramsSimulator->dt;  
 
     //заполняем результат
     //TODO: переписать в цикле
@@ -69,7 +70,7 @@ StateVector MathModelQuadrotor::calculateStateVector(StateVector &lastStateVecto
     res.RollRate = funcRightFirstIntegral.RollRate;
     res.YawRate = funcRightFirstIntegral.YawRate;  
     //TODO - проеврить правильность интегратора
-    
+    res.timeStamp += paramsSimulator->dt;
     return (res);
 }
 
@@ -114,8 +115,8 @@ StateVector	MathModelQuadrotor::functionRight(StateVector &lastStateVector, Vect
                     Math::rotationMatrix(lastStateVector.Pitch, lastStateVector.Roll, lastStateVector.Yaw) +
                     paramsQuadrotor->mass * (-GRAVITY_ACCELERATION * normalizeVector.transpose()) ) / paramsQuadrotor->mass;
 
-    acceleration2 = ((1/paramsQuadrotor->mass) * Math::rotationMatrix(lastStateVector.Pitch, lastStateVector.Roll, lastStateVector.Yaw)) * 
-                    (normalizeVector * (paramsQuadrotor->b * sumRotorAngularVelocity)) + (-GRAVITY_ACCELERATION * normalizeVector);
+    acceleration2 = (((1/paramsQuadrotor->mass) * Math::rotationMatrix(lastStateVector.Pitch, lastStateVector.Roll, lastStateVector.Yaw)) * 
+                    (normalizeVector * (paramsQuadrotor->b * sumRotorAngularVelocity))) + (-GRAVITY_ACCELERATION * normalizeVector);
     //проверили в калькуляторе ускорения - вроде ок
     // результат до деления на массу : (0, 0, -0.5383) / 0.0630 = (0, 0, -8.54444444), что совпадает
     // переписывание формулы в соотв с инстркцией, без преобразований даёт похожий результат
@@ -145,36 +146,17 @@ Eigen::Vector3d MathModelQuadrotor::TestMatrRotation(StateVector &lastStateVecto
     Eigen::Vector3d testVector(1, 0, 0);
 
     res = Math::rotationMatrix(lastStateVector.Roll, lastStateVector.Pitch, lastStateVector.Yaw).transpose()*
-          testVector;  \
+          testVector;  
 
     return res;
 }
 
-void MathModelQuadrotor::TestMathModel()
+StateVector MathModelQuadrotor::TestMathModel(StateVector &lastStateVector, VectorXd_t testRotorsAngularVelocity)
 {
-    VectorXd_t testRotorsAngularVelocity(4);
-    testRotorsAngularVelocity[0] = 0;
-    testRotorsAngularVelocity[1] = 0;
-    testRotorsAngularVelocity[2] = 1000;
-    testRotorsAngularVelocity[3] = 1000;
+    StateVector res = {0};
+    lastStateVector = functionRight(lastStateVector, testRotorsAngularVelocity);      
+    lastStateVector = calculateStateVector(lastStateVector, testRotorsAngularVelocity);
+    res = lastStateVector;
+    return (res);
 
-    StateVector testStateVector = {0};
-    testStateVector.Pitch = 0;
-    testStateVector.Roll = 0;
-    testStateVector.Yaw = 0;
-
-    testStateVector = functionRight(testStateVector, testRotorsAngularVelocity);
-
-    testStateVector.VelX = 0; 
-    testStateVector.VelY = 0;
-    testStateVector.VelZ = 5;
-
-    testStateVector.PitchRate = 0; 
-    testStateVector.RollRate = 0;
-    testStateVector.YawRate = 0;
-
-    testStateVector = calculateStateVector(testStateVector, testRotorsAngularVelocity);
-
-    Graphic gr(500, 500);
-    gr.drawPoints();
 }

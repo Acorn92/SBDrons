@@ -6,6 +6,7 @@
 #include <message.hpp>
 
 
+
 class MathModelQuadrotor
 {
 	public:
@@ -26,7 +27,7 @@ class MathModelQuadrotor
 		StateVector		functionRight(StateVector &lastStateVector, VectorXd_t rotorsAngularVelocity);
 		Eigen::Vector3d TestMatrRotation(StateVector &lastStateVector);
 
-		void TestMathModel();
+		StateVector TestMathModel(StateVector &lastStateVector, VectorXd_t testRotorsAngularVelocity);
 };
 
 // размер вектора значений правой части
