@@ -14,12 +14,21 @@ PID_Circuit::PID_Circuit (const Eigen::Vector3d Kp, const Eigen::Vector3d Ki, co
 					 	 Kd[i]);
 }
 
+Eigen::Vector3d	 PID_Circuit::output(Eigen::Vector3d	 inputValue, Eigen::Vector3d	 targetValue, double dt)
+{
+	Eigen::Vector3d	 res;
+	for (int i = 0; i < 3; i++)
+		res[i] = circuit[i].update(inputValue[i], targetValue[i], dt);
+	return res;
+
+}
+
 UAVControlSystem::UAVControlSystem(const ParamsControlSystem *paramsControlSystem, const ParamsSimulator *paramsSimulator,
 								   const ParamsQuadrotor *paramsQuadrotor, MotionPlanner* pathPlaner)
 {	
 	PID_Circuit velocity(paramsControlSystem->KpAngularRate, paramsControlSystem->KiAngularRate, paramsControlSystem->KdAngularRate);	
-	PID_Circuit angle(paramsControlSystem->KpAngularRate, paramsControlSystem->KiAngularRate, paramsControlSystem->KdAngularRate);
-	PID_Circuit position(paramsControlSystem->KpAngularRate, paramsControlSystem->KiAngularRate, paramsControlSystem->KdAngularRate);
+	PID_Circuit angle(paramsControlSystem->KpAngle, paramsControlSystem->KiAngle, paramsControlSystem->KdAngle);
+	position = new PID_Circuit(paramsControlSystem->KpPosition, paramsControlSystem->KiPosition, paramsControlSystem->KdPosition);
 	//TODO: продолжить разработку системы управления. таймкод вебинара: 31:40
 }
 
@@ -33,6 +42,11 @@ UAVControlSystem::UAVControlSystem(const ParamsControlSystem *paramsControlSyste
  */
 VectorXd_t	UAVControlSystem::calculateMotorVelocity(VectorXd_t stateVector, MatrixXd_t targetPoints, double time)
 {
+	//в этой функции делаем управление
+	//получаем количество целевых точек
+	//летим в точку
+	//оцениваем что прилетели
+	//летим в следующую
 }
 
 /**
@@ -67,8 +81,15 @@ void		UAVControlSystem::PIDThrust()
  * @brief ПИД по позиции
  * 
  */
-void		UAVControlSystem::PIDPosition()
+void		UAVControlSystem::PIDPosition(Eigen::Vector3d	 stateVector, Eigen::Vector3d	 tagetPos)
 {
+	//TODO - получить тягу из позиции Z
+	Eigen::Vector3d	 pos;
+	for (int i = 0; i < 3; i++)
+		pos[i] = stateVector[i];
+	pos = position->output(pos, tagetPos, paramsSimulator->dt);
+	//pos[2] - должнв быть команда по тяге
+	
 }
 
 /**
@@ -83,7 +104,7 @@ void		UAVControlSystem::PIDAngles()
  * @brief ПИД по угловой скорости
  * 
  */
-void UAVControlSystem::PIDAngularRate(const ParamsControlSystem *paramsControlSystem)
+void UAVControlSystem::PIDAngularRate()
 {
 }
 
@@ -94,8 +115,9 @@ void UAVControlSystem::PIDAngularRate(const ParamsControlSystem *paramsControlSy
  * @return true - принадлежим сфере 
  * @return false - не принадлежим сфере
  */
-bool		UAVControlSystem::checkRadius(VectorXd_t targetPoints)
+bool UAVControlSystem::checkRadius(VectorXd_t targetPoints)
 {
+	
 }
 
 /**
@@ -115,6 +137,7 @@ void		UAVControlSystem::saturation(double &arg, double min, double max)
  * @param commandThrust команда по тяги
  * @return угловая скорость ротора
  */
-double		UAVControlSystem::commandThrustToOmegaRotors(double commandThrust)
+double UAVControlSystem::commandThrustToOmegaRotors(double commandThrust)
 {
+	//Pdes - тяга
 }

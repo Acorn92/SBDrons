@@ -11,6 +11,7 @@ class PID_Circuit
 {
 	public:
 		PID_Circuit(const Eigen::Vector3d Kp, const Eigen::Vector3d Ki, const Eigen::Vector3d Kd);
+		Eigen::Vector3d	 output(Eigen::Vector3d	 inputValue, Eigen::Vector3d	 targetValue, double dt);
 	private:
 		PID *circuit;
 		int countCircuit;	
@@ -29,6 +30,8 @@ class UAVControlSystem
 		const ParamsQuadrotor		*paramsQuadrotor;
 		const ParamsControlSystem	*parContrlSyst;
 		
+		PID_Circuit *position;
+
 		// Ошибки
 		Eigen::Vector3d				angularRateError;
 		Eigen::Vector3d				angularPositionError;
@@ -79,9 +82,9 @@ class UAVControlSystem
 		VectorXd_t			mixer();
 		void				fillDesiredPosition(MatrixXd_t targetPoints);
 		void				PIDThrust();
-		void				PIDPosition();
+		void				PIDPosition(Eigen::Vector3d	 stateVector, Eigen::Vector3d	 tagetPos);
 		void				PIDAngles();
-		void				PIDAngularRate(const ParamsControlSystem *paramsControlSystem);
+		void				PIDAngularRate();
 		bool				checkRadius(VectorXd_t targetPoints);
 		void				saturation(double &arg, double min, double max);
 		double				commandThrustToOmegaRotors(double commandThrust);
