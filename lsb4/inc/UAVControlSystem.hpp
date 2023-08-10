@@ -82,10 +82,10 @@ class UAVControlSystem
 		VectorXd_t			mixer();
 		void				fillDesiredPosition(MatrixXd_t targetPoints);
 		void				PIDThrust();
-		void				PIDPosition(Eigen::Vector3d	 stateVector, Eigen::Vector3d	 tagetPos);
+		void				PIDPosition();
 		void				PIDAngles();
 		void				PIDAngularRate();
-		bool				checkRadius(VectorXd_t targetPoints);
+		bool				checkRadius(MatrixXd_t targetPoints);
 		void				saturation(double &arg, double min, double max);
 		double				commandThrustToOmegaRotors(double commandThrust);
 };

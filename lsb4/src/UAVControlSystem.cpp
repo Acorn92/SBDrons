@@ -30,6 +30,8 @@ UAVControlSystem::UAVControlSystem(const ParamsControlSystem *paramsControlSyste
 	PID_Circuit angle(paramsControlSystem->KpAngle, paramsControlSystem->KiAngle, paramsControlSystem->KdAngle);
 	position = new PID_Circuit(paramsControlSystem->KpPosition, paramsControlSystem->KiPosition, paramsControlSystem->KdPosition);
 	//TODO: продолжить разработку системы управления. таймкод вебинара: 31:40
+	motionPlanner = pathPlaner;
+	this->indexPoint = 0;
 }
 
 /**
@@ -43,10 +45,27 @@ UAVControlSystem::UAVControlSystem(const ParamsControlSystem *paramsControlSyste
 VectorXd_t	UAVControlSystem::calculateMotorVelocity(VectorXd_t stateVector, MatrixXd_t targetPoints, double time)
 {
 	//в этой функции делаем управление
-	//получаем количество целевых точек
-	//летим в точку
-	//оцениваем что прилетели
-	//летим в следующую
+	this->indexPoint = time;
+	//пока не пролетели все точки из траектории
+	// //while (this->indexPoint < motionPlanner->getSizeTimeTrajectory())
+	// while (time < 1/*количество точек*/)
+	// {
+		//назначем точку как целевую
+		this->fillDesiredPosition(targetPoints);
+	
+		//пока не прилетели
+		while (checkRadius(targetPoints))
+		{
+			//летим
+			this->PIDPosition();
+			this->PIDAngles();
+			this->PIDAngularRate();
+		}
+		//миксер
+		//летим в следующую
+		
+	// }
+	return this->mixerCommands;
 }
 
 /**
@@ -64,8 +83,10 @@ VectorXd_t	UAVControlSystem::mixer()
  * 
  * @param targetPoints массив точек
  */
-void		UAVControlSystem::fillDesiredPosition(MatrixXd_t targetPoints)
+void UAVControlSystem::fillDesiredPosition(MatrixXd_t targetPoints)
 {
+	for (int i = 0; i < 3; i++)
+		this->desiredPosition[i] = targetPoints(this->indexPoint,i);
 }
 
 /**
@@ -81,13 +102,13 @@ void		UAVControlSystem::PIDThrust()
  * @brief ПИД по позиции
  * 
  */
-void		UAVControlSystem::PIDPosition(Eigen::Vector3d	 stateVector, Eigen::Vector3d	 tagetPos)
+void		UAVControlSystem::PIDPosition()
 {
 	//TODO - получить тягу из позиции Z
 	Eigen::Vector3d	 pos;
 	for (int i = 0; i < 3; i++)
-		pos[i] = stateVector[i];
-	pos = position->output(pos, tagetPos, paramsSimulator->dt);
+		pos[i] = this->stateVector[i];
+	desiredVelocity = position->output(pos, this->desiredPosition, paramsSimulator->dt);
 	//pos[2] - должнв быть команда по тяге
 	
 }
@@ -98,6 +119,7 @@ void		UAVControlSystem::PIDPosition(Eigen::Vector3d	 stateVector, Eigen::Vector3
  */
 void		UAVControlSystem::PIDAngles()
 {
+	desiredAngle = position->output(desiredVelocity, this->desiredPosition, paramsSimulator->dt);
 }
 
 /**
@@ -106,6 +128,7 @@ void		UAVControlSystem::PIDAngles()
  */
 void UAVControlSystem::PIDAngularRate()
 {
+	desiredAngularRate = position->output(desiredAngle, this->desiredPosition, paramsSimulator->dt);
 }
 
 /**
@@ -115,9 +138,16 @@ void UAVControlSystem::PIDAngularRate()
  * @return true - принадлежим сфере 
  * @return false - не принадлежим сфере
  */
-bool UAVControlSystem::checkRadius(VectorXd_t targetPoints)
+bool UAVControlSystem::checkRadius(MatrixXd_t targetPoints)
 {
-	
+	bool res;
+	for (int i = 0; i < 3; i++)
+		if ((targetPoints(this->indexPoint, i) - stateVector[i]) <= 0.1) 
+			res = true;
+		else
+			res = false;
+
+	return res;
 }
 
 /**

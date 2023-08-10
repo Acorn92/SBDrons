@@ -12,6 +12,10 @@ UAVControlSystem.hpp
 iostream
 -
 
+/home/ac/Projects/SkillboxDrons/lsb4/src/simulator.cpp
+simulator.hpp
+/home/ac/Projects/SkillboxDrons/lsb4/src/simulator.hpp
+
 /usr/include/eigen3/Eigen/Cholesky
 Core
 /usr/include/eigen3/Eigen/Core
@@ -1078,6 +1082,14 @@ Eigen/Dense
 typesData.hpp
 -
 
+inc/mathModelQuadrotor.hpp
+typesData.hpp
+-
+math.hpp
+-
+message.hpp
+-
+
 inc/message.hpp
 
 inc/motionPlanner.hpp
@@ -1086,6 +1098,30 @@ typesData.hpp
 math.hpp
 -
 message.hpp
+-
+
+inc/simulator.hpp
+typesData.hpp
+-
+sys/socket.h
+-
+arpa/inet.h
+-
+iostream
+-
+string
+-
+mathModelQuadrotor.hpp
+-
+UAVControlSystem.hpp
+-
+message.hpp
+-
+math.hpp
+-
+unistd.h
+-
+chrono
 -
 
 inc/typesData.hpp
