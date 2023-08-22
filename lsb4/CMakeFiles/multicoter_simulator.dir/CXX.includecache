@@ -6,12 +6,6 @@
 
 #IncludeRegexTransform: 
 
-/home/ac/Projects/SkillboxDrons/lsb4/src/UAVControlSystem.cpp
-UAVControlSystem.hpp
-/home/ac/Projects/SkillboxDrons/lsb4/src/UAVControlSystem.hpp
-iostream
--
-
 /home/ac/Projects/SkillboxDrons/lsb4/src/simulator.cpp
 simulator.hpp
 /home/ac/Projects/SkillboxDrons/lsb4/src/simulator.hpp

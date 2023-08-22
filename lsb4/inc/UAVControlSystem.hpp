@@ -24,7 +24,7 @@ class UAVControlSystem
 	public:
 		UAVControlSystem(const ParamsControlSystem *paramsControlSystem, const ParamsSimulator *paramsSimulator,
 						 const ParamsQuadrotor *paramsQuadrotor, MotionPlanner* motionPlanner);
-		VectorXd_t					calculateMotorVelocity(VectorXd_t stateVector, MatrixXd_t targetPoints, double time);
+		VectorXd_t					calculateMotorVelocity(StateVector stateVector, MatrixXd_t targetPoints, double time);
 	private:
 		const ParamsSimulator		*paramsSimulator;
 		const ParamsQuadrotor		*paramsQuadrotor;
@@ -60,6 +60,7 @@ class UAVControlSystem
 		Eigen::Vector3d				derivativeAccelerationError;
 
 		// Целевые параметры управления
+		double						desTang;
 		Eigen::Vector3d				desiredPosition;
 		Eigen::Vector3d				desiredVelocity;
 		Eigen::Vector3d				desiredAcceleration;
@@ -70,7 +71,7 @@ class UAVControlSystem
 		Eigen::Vector3d				desiredAngularAcceleration;
 
 		VectorXd_t					mixerCommands;
-		VectorXd_t					stateVector;
+		StateVector					stateVector;
 		double						time;
 		double						timeTrajectory; // время, за которое БЛА пролетает траекторию
 		double						timeStopTrajectory; // время, для остановки движения дрона, после достижения конечной точки

@@ -62,26 +62,30 @@ void Simulator::run()
 	    stateVector.RollRate = 0;
 	    stateVector.YawRate = 0;
 		// устанавливаем метку времени
-		
+		stateVector.timeStamp = 0;
+		MatrixXd_t targetPoint(1, 4);
+
+		targetPoint << 0, 0, 500, 0;
 	// Выполняем моделирование системы в цикле
 	for (double t = 0; t < paramsSimulator.simulationTotalTime; t += paramsSimulator.dt)
 	{
+		VectorXd_t angularVelocityRotors(4);
 		stateVector.timeStamp = t;
 		// тут необходимо вызывать методы для получения комманд управления
+		angularVelocityRotors = controlSystem->calculateMotorVelocity(stateVector, targetPoint, t);
 		// тут необходимо вызывать методы для вычисления функции правых частей
-		// VectorXd_t angularVelocityRotors(4);
+		
 
 		// angularVelocityRotors << 1000, 1000, 1000, 1000;
-		// stateVector = mathModelQuadrotor->functionRight(stateVector, angularVelocityRotors);
+		stateVector = mathModelQuadrotor->calculateStateVector(stateVector, angularVelocityRotors);
 
 		
-		// mathModelQuadrotor->TestMatrRotation(stateVector);
-		VectorXd_t testRotorsAngularVelocity(4);
-		testRotorsAngularVelocity[0] = 2600;
-		testRotorsAngularVelocity[1] = 2598;
-		testRotorsAngularVelocity[2] = 2600;
-		testRotorsAngularVelocity[3] = 2602;
-		stateVector = mathModelQuadrotor->TestMathModel(stateVector, testRotorsAngularVelocity);
+		// VectorXd_t testRotorsAngularVelocity(4);
+		// testRotorsAngularVelocity[0] = 2600;
+		// testRotorsAngularVelocity[1] = 2598;
+		// testRotorsAngularVelocity[2] = 2600;
+		// testRotorsAngularVelocity[3] = 2602;
+		// stateVector = mathModelQuadrotor->TestMathModel(stateVector, testRotorsAngularVelocity);
 
 		// математической модели, выполнять интегрирование приращений и формирование вектора состояния
 		// Прим. Вектор состояния предлагается использовать в виде структуры(описание структуры в message.hpp)

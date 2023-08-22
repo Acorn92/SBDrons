@@ -42,10 +42,12 @@ UAVControlSystem::UAVControlSystem(const ParamsControlSystem *paramsControlSyste
  * @param time 
  * @return VectorXd_t 
  */
-VectorXd_t	UAVControlSystem::calculateMotorVelocity(VectorXd_t stateVector, MatrixXd_t targetPoints, double time)
+VectorXd_t	UAVControlSystem::calculateMotorVelocity(StateVector stateVector, MatrixXd_t targetPoints, double time)
 {
+	this->mixerCommands = VectorXd_t(4);
 	//в этой функции делаем управление
 	this->indexPoint = time;
+	this->stateVector = stateVector;
 	//пока не пролетели все точки из траектории
 	// //while (this->indexPoint < motionPlanner->getSizeTimeTrajectory())
 	// while (time < 1/*количество точек*/)
@@ -63,7 +65,7 @@ VectorXd_t	UAVControlSystem::calculateMotorVelocity(VectorXd_t stateVector, Matr
 		}
 		//миксер
 		//летим в следующую
-		
+	mixer();
 	// }
 	return this->mixerCommands;
 }
@@ -75,7 +77,13 @@ VectorXd_t	UAVControlSystem::calculateMotorVelocity(VectorXd_t stateVector, Matr
  */
 VectorXd_t	UAVControlSystem::mixer()
 {
+	VectorXd_t res;
 
+	this->mixerCommands << this->desiredVelocity[2] + this->desiredAngularRate[0] - this->desiredAngularRate[2],
+						this->desiredVelocity[2] - this->desiredAngularRate[1] + this->desiredAngularRate[2],
+						this->desiredVelocity[2] - this->desiredAngularRate[0] - this->desiredAngularRate[2],
+						this->desiredVelocity[2] + this->desiredAngularRate[1] + this->desiredAngularRate[2];
+	return res;
 }
 
 /**
@@ -87,6 +95,7 @@ void UAVControlSystem::fillDesiredPosition(MatrixXd_t targetPoints)
 {
 	for (int i = 0; i < 3; i++)
 		this->desiredPosition[i] = targetPoints(this->indexPoint,i);
+	desTang = targetPoints(this->indexPoint,3);
 }
 
 /**
@@ -109,7 +118,7 @@ void		UAVControlSystem::PIDPosition()
 	for (int i = 0; i < 3; i++)
 		pos[i] = this->stateVector[i];
 	desiredVelocity = position->output(pos, this->desiredPosition, paramsSimulator->dt);
-	//pos[2] - должнв быть команда по тяге
+	
 	
 }
 
@@ -119,7 +128,9 @@ void		UAVControlSystem::PIDPosition()
  */
 void		UAVControlSystem::PIDAngles()
 {
-	desiredAngle = position->output(desiredVelocity, this->desiredPosition, paramsSimulator->dt);
+	Eigen::Vector3d angel;
+	angel << this->desiredVelocity[1], this->desiredVelocity[2], this->desTang;
+	desiredAngle = position->output(angel, this->desiredPosition, paramsSimulator->dt);
 }
 
 /**
