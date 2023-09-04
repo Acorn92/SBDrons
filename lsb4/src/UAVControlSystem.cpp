@@ -7,15 +7,14 @@
 
 PID_Circuit::PID_Circuit (const Eigen::Vector3d Kp, const Eigen::Vector3d Ki, const Eigen::Vector3d Kd)
 {		
-	circuit = new PID[3];
+	this->circuit = std::make_shared<PID[3]>();
 	for (int i = 0; i < 3; i++)
-		circuit[i] = PID(Kp[i], 
-						 Ki[i], 
-					 	 Kd[i]);
+		this->circuit[i] = PID(Kp[i], Ki[i], Kd[i]);
 }
 
 Eigen::Vector3d	 PID_Circuit::output(Eigen::Vector3d	 inputValue, Eigen::Vector3d	 targetValue, double dt)
 {
+	//TODO - проверить работу каскада ПИДов
 	Eigen::Vector3d	 res;
 	for (int i = 0; i < 3; i++)
 		res[i] = circuit[i].update(inputValue[i], targetValue[i], dt);
@@ -23,6 +22,7 @@ Eigen::Vector3d	 PID_Circuit::output(Eigen::Vector3d	 inputValue, Eigen::Vector3
 
 }
 
+//TODO: вынести переменные в поля класса velocity и angle
 UAVControlSystem::UAVControlSystem(const ParamsControlSystem *paramsControlSystem, const ParamsSimulator *paramsSimulator,
 								   const ParamsQuadrotor *paramsQuadrotor, MotionPlanner* pathPlaner)
 {	
@@ -31,6 +31,7 @@ UAVControlSystem::UAVControlSystem(const ParamsControlSystem *paramsControlSyste
 	position = new PID_Circuit(paramsControlSystem->KpPosition, paramsControlSystem->KiPosition, paramsControlSystem->KdPosition);
 	//TODO: продолжить разработку системы управления. таймкод вебинара: 31:40
 	motionPlanner = pathPlaner;
+	
 	this->indexPoint = 0;
 }
 
@@ -44,6 +45,8 @@ UAVControlSystem::UAVControlSystem(const ParamsControlSystem *paramsControlSyste
  */
 VectorXd_t	UAVControlSystem::calculateMotorVelocity(StateVector stateVector, MatrixXd_t targetPoints, double time)
 {
+	for (int i = 0; i < 3; i++)
+		currentPosition[i] = stateVector[i];
 	this->mixerCommands = VectorXd_t(4);
 	//в этой функции делаем управление
 	this->indexPoint = time;
@@ -53,16 +56,16 @@ VectorXd_t	UAVControlSystem::calculateMotorVelocity(StateVector stateVector, Mat
 	// while (time < 1/*количество точек*/)
 	// {
 		//назначем точку как целевую
-		this->fillDesiredPosition(targetPoints);
+	this->fillDesiredPosition(targetPoints);
 	
 		//пока не прилетели
-		while (checkRadius(targetPoints))
-		{
+		//while (checkRadius(targetPoints))
+		//{
 			//летим
-			this->PIDPosition();
-			this->PIDAngles();
-			this->PIDAngularRate();
-		}
+	this->PIDPosition();
+	// this->PIDAngles();
+	// this->PIDAngularRate();
+		//}
 		//миксер
 		//летим в следующую
 	mixer();
@@ -79,10 +82,10 @@ VectorXd_t	UAVControlSystem::mixer()
 {
 	VectorXd_t res;
 
-	this->mixerCommands << this->desiredVelocity[2] + this->desiredAngularRate[0] - this->desiredAngularRate[2],
-						this->desiredVelocity[2] - this->desiredAngularRate[1] + this->desiredAngularRate[2],
-						this->desiredVelocity[2] - this->desiredAngularRate[0] - this->desiredAngularRate[2],
-						this->desiredVelocity[2] + this->desiredAngularRate[1] + this->desiredAngularRate[2];
+	this->mixerCommands << this->desiredVelocity[2] /*+ this->desiredAngularRate[0] - this->desiredAngularRate[2]*/,
+						   this->desiredVelocity[2] /*- this->desiredAngularRate[1] + this->desiredAngularRate[2]*/,
+						   this->desiredVelocity[2] /*- this->desiredAngularRate[0] - this->desiredAngularRate[2]*/,
+						   this->desiredVelocity[2] /*+ this->desiredAngularRate[1] + this->desiredAngularRate[2]*/;
 	return res;
 }
 
@@ -114,12 +117,7 @@ void		UAVControlSystem::PIDThrust()
 void		UAVControlSystem::PIDPosition()
 {
 	//TODO - получить тягу из позиции Z
-	Eigen::Vector3d	 pos;
-	for (int i = 0; i < 3; i++)
-		pos[i] = this->stateVector[i];
-	desiredVelocity = position->output(pos, this->desiredPosition, paramsSimulator->dt);
-	
-	
+	desiredVelocity = position->output(currentPosition, this->desiredPosition, paramsSimulator->dt);
 }
 
 /**
@@ -149,16 +147,12 @@ void UAVControlSystem::PIDAngularRate()
  * @return true - принадлежим сфере 
  * @return false - не принадлежим сфере
  */
-bool UAVControlSystem::checkRadius(MatrixXd_t targetPoints)
+bool UAVControlSystem::checkRadius(const Eigen::Vector3d& waypoint)
 {
-	bool res;
-	for (int i = 0; i < 3; i++)
-		if ((targetPoints(this->indexPoint, i) - stateVector[i]) <= 0.1) 
-			res = true;
-		else
-			res = false;
-
-	return res;
+	if ((this->currentPosition - waypoint).norm() <= 0.01)
+		return (true);
+	else
+		return (false);
 }
 
 /**

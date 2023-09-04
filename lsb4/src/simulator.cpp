@@ -74,25 +74,7 @@ void Simulator::run()
 		// тут необходимо вызывать методы для получения комманд управления
 		angularVelocityRotors = controlSystem->calculateMotorVelocity(stateVector, targetPoint, t);
 		// тут необходимо вызывать методы для вычисления функции правых частей
-		
-
-		// angularVelocityRotors << 1000, 1000, 1000, 1000;
 		stateVector = mathModelQuadrotor->calculateStateVector(stateVector, angularVelocityRotors);
-
-		
-		// VectorXd_t testRotorsAngularVelocity(4);
-		// testRotorsAngularVelocity[0] = 2600;
-		// testRotorsAngularVelocity[1] = 2598;
-		// testRotorsAngularVelocity[2] = 2600;
-		// testRotorsAngularVelocity[3] = 2602;
-		// stateVector = mathModelQuadrotor->TestMathModel(stateVector, testRotorsAngularVelocity);
-
-		// математической модели, выполнять интегрирование приращений и формирование вектора состояния
-		// Прим. Вектор состояния предлагается использовать в виде структуры(описание структуры в message.hpp)
-		
-		// Пример заполнения вектора состояния
-		// Вектор состояния в результате должен формироваться по результатам интегрирования приращений
-		// математической модели(интегрирования линейных и угловых ускорений)
 	
 		// Отправляем вектор состояния
 		sendMessage(stateVector);

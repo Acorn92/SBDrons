@@ -9,9 +9,7 @@
  */
 void			MotionPlanner::calculateTrajectory(StateVector stateVector, MatrixXd_t targetPoints, VectorXd_t timeTrajectory)
 {
-	int countPoints = getSizeTimeTrajectory();
-
-	MatrixXd_t A(6, 6);
+	
 }
 
 VectorXd_t		MotionPlanner::getRowsCoeffX(unsigned int indexRows)
@@ -60,4 +58,8 @@ double			MotionPlanner::calculateDesiredAcceleration(VectorXd_t c, double t)
 
 MatrixXd_t		MotionPlanner::trajectoryGenerator(VectorXd_t currentPoints, VectorXd_t targetPoints, double T)
 {
+	//тут рассчитать матрицу с точками для оптимальной траектории
+	int countPoints = getSizeTimeTrajectory();
+
+	MatrixXd_t A(6, 6);
 }

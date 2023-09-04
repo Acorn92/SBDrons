@@ -6,6 +6,7 @@
 #include "motionPlanner.hpp"
 #include "PID.hpp"
 #include <cmath>
+#include <memory>
 
 class PID_Circuit
 {
@@ -13,7 +14,7 @@ class PID_Circuit
 		PID_Circuit(const Eigen::Vector3d Kp, const Eigen::Vector3d Ki, const Eigen::Vector3d Kd);
 		Eigen::Vector3d	 output(Eigen::Vector3d	 inputValue, Eigen::Vector3d	 targetValue, double dt);
 	private:
-		PID *circuit;
+		std::shared_ptr<PID[]> circuit;
 		int countCircuit;	
 };
 
@@ -60,7 +61,7 @@ class UAVControlSystem
 		Eigen::Vector3d				derivativeAccelerationError;
 
 		// Целевые параметры управления
-		double						desTang;
+		double						desTang;// целевая тяга(координата Z)
 		Eigen::Vector3d				desiredPosition;
 		Eigen::Vector3d				desiredVelocity;
 		Eigen::Vector3d				desiredAcceleration;
@@ -69,6 +70,8 @@ class UAVControlSystem
 		Eigen::Vector2d				desiredAngleHorizontal;
 		Eigen::Vector3d				desiredAngularRate;
 		Eigen::Vector3d				desiredAngularAcceleration;
+
+		Eigen::Vector3d	 			currentPosition ;//текущая позиция
 
 		VectorXd_t					mixerCommands;
 		StateVector					stateVector;
@@ -86,7 +89,7 @@ class UAVControlSystem
 		void				PIDPosition();
 		void				PIDAngles();
 		void				PIDAngularRate();
-		bool				checkRadius(MatrixXd_t targetPoints);
+		bool 				checkRadius(const Eigen::Vector3d& waypoint);
 		void				saturation(double &arg, double min, double max);
 		double				commandThrustToOmegaRotors(double commandThrust);
 };
