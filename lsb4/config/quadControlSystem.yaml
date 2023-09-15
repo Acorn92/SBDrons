@@ -25,17 +25,17 @@ KpZAngle: 0
 KiZAngle: 0
 KdZAngle: 0
 # Коэффициенты ПИД регулятора пространственного положения по оси X
-KpXPosition: 0
-KiXPosition: 0
-KdXPosition: 0
+KpXPosition: 1
+KiXPosition: 1
+KdXPosition: 1
 # Коэффициенты ПИД регулятора пространственного положения по оси Y
-KpYPosition: 0
-KiYPosition: 0
-KdYPosition: 0
+KpYPosition: 1
+KiYPosition: 1
+KdYPosition: 1
 # Коэффициенты ПИД регулятора пространственного положения по оси Z
-KpZPosition: 0
-KiZPosition: 0
-KdZPosition: 0
+KpZPosition: 1
+KiZPosition: 1
+KdZPosition: 1
 
 # Ограничение значений выхода ПИД-регулятора по угловому положению
 maxCommandAngle: 0

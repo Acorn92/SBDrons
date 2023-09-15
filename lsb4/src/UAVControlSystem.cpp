@@ -5,19 +5,25 @@
 	#include <iostream>
 #endif
 
+//TODO - добавить векторы минимума и максимума
 PID_Circuit::PID_Circuit (const Eigen::Vector3d Kp, const Eigen::Vector3d Ki, const Eigen::Vector3d Kd)
 {		
 	this->circuit = std::make_shared<PID[3]>();
 	for (int i = 0; i < 3; i++)
-		this->circuit[i] = PID(Kp[i], Ki[i], Kd[i]);
+	{
+		this->circuit[i] = PID(Kp[i], Ki[i], Kd[i], 0, 3000);
+		// this->circuit[i] = PID(1, 1, 1);
+	}
 }
 
-Eigen::Vector3d	 PID_Circuit::output(Eigen::Vector3d	 inputValue, Eigen::Vector3d	 targetValue, double dt)
+Eigen::Vector3d	 PID_Circuit::output(Eigen::Vector3d &inputValue, Eigen::Vector3d &targetValue, double dt)
 {
 	//TODO - проверить работу каскада ПИДов
 	Eigen::Vector3d	 res;
 	for (int i = 0; i < 3; i++)
-		res[i] = circuit[i].update(inputValue[i], targetValue[i], dt);
+	{
+		res[i] = this->circuit[i].update(inputValue[i], targetValue[i], dt);
+	}
 	return res;
 
 }
@@ -98,7 +104,7 @@ void UAVControlSystem::fillDesiredPosition(MatrixXd_t targetPoints)
 {
 	for (int i = 0; i < 3; i++)
 		this->desiredPosition[i] = targetPoints(this->indexPoint,i);
-	desTang = targetPoints(this->indexPoint,3);
+	desTang = targetPoints(this->indexPoint,3);//тангаж
 }
 
 /**

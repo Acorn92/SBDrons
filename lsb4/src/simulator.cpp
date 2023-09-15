@@ -65,7 +65,7 @@ void Simulator::run()
 		stateVector.timeStamp = 0;
 		MatrixXd_t targetPoint(1, 4);
 
-		targetPoint << 0, 0, 500, 0;
+		targetPoint << 0, 0, 40, 0;
 	// Выполняем моделирование системы в цикле
 	for (double t = 0; t < paramsSimulator.simulationTotalTime; t += paramsSimulator.dt)
 	{
@@ -77,6 +77,8 @@ void Simulator::run()
 		stateVector = mathModelQuadrotor->calculateStateVector(stateVector, angularVelocityRotors);
 	
 		// Отправляем вектор состояния
+		// TODO - сука, летит выше точки назначение
+	// проверить значения угловых двигателей после достижения точки
 		sendMessage(stateVector);
 		// Для простейшей имитации движения аппарата в реальном времени 
 		// можно вызывать задержку или воспользоваться прерываниями

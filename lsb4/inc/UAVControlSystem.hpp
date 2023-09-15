@@ -12,7 +12,7 @@ class PID_Circuit
 {
 	public:
 		PID_Circuit(const Eigen::Vector3d Kp, const Eigen::Vector3d Ki, const Eigen::Vector3d Kd);
-		Eigen::Vector3d	 output(Eigen::Vector3d	 inputValue, Eigen::Vector3d	 targetValue, double dt);
+		Eigen::Vector3d	 output(Eigen::Vector3d	 &inputValue, Eigen::Vector3d	 &targetValue, double dt);
 	private:
 		std::shared_ptr<PID[]> circuit;
 		int countCircuit;	
