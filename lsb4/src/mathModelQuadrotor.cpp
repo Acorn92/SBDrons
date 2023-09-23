@@ -23,7 +23,7 @@ MathModelQuadrotor::MathModelQuadrotor(const ParamsQuadrotor *paramsQuadrotor, c
 StateVector MathModelQuadrotor::calculateStateVector(StateVector &lastStateVector, VectorXd_t rotorsAngularVelocity)
 {
     StateVector res = {0};
-
+    res.timeStamp = lastStateVector.timeStamp;
     StateVector funcRight = {0};
     StateVector funcRightDt = {0};
     StateVector funcRightFirstIntegral = {0};
@@ -38,13 +38,13 @@ StateVector MathModelQuadrotor::calculateStateVector(StateVector &lastStateVecto
 
     //получаем скорости
     funcRightFirstIntegral += funcRight * paramsSimulator->dt;
-
     // funcRightSecondIntegral += funcRightFirstIntegral * paramsSimulator->dt;  
 
     //получаем положения
     funcRightSecondIntegral.X += funcRightFirstIntegral.VelX * paramsSimulator->dt;
     funcRightSecondIntegral.Y += funcRightFirstIntegral.VelY * paramsSimulator->dt;
     funcRightSecondIntegral.Z += funcRightFirstIntegral.VelZ * paramsSimulator->dt;  
+    
 
     funcRightSecondIntegral.Pitch += funcRightFirstIntegral.PitchRate * paramsSimulator->dt;
     funcRightSecondIntegral.Roll += funcRightFirstIntegral.RollRate * paramsSimulator->dt;
@@ -68,7 +68,7 @@ StateVector MathModelQuadrotor::calculateStateVector(StateVector &lastStateVecto
     res.RollRate = funcRightFirstIntegral.RollRate;
     res.YawRate = funcRightFirstIntegral.YawRate;  
     //TODO - проеврить правильность интегратора
-    res.timeStamp += paramsSimulator->dt;
+    //res.timeStamp += paramsSimulator->dt;
     return (res);
 }
 
@@ -102,6 +102,7 @@ StateVector	MathModelQuadrotor::functionRight(StateVector &lastStateVector, Vect
 
     //получаем сумму квадратов угловых скоростей двигателей
     for (uint i = 0; i < paramsQuadrotor->numberOfRotors; i++)  
+        // sumRotorAngularVelocity += squarAVR[i];
         sumRotorAngularVelocity += squarAVR[i];
 
     //верно для соостного квадракоптера
@@ -112,7 +113,8 @@ StateVector	MathModelQuadrotor::functionRight(StateVector &lastStateVector, Vect
     acceleration = ((paramsQuadrotor->b * sumRotorAngularVelocity)*normalizeVector.transpose() * 
                     Math::rotationMatrix(lastStateVector.Pitch, lastStateVector.Roll, lastStateVector.Yaw) +
                     paramsQuadrotor->mass * (-GRAVITY_ACCELERATION * normalizeVector.transpose()) ) / paramsQuadrotor->mass;
-
+    // acceleration = (sumRotorAngularVelocity * normalizeVector).transpose() * Math::rotationMatrix(lastStateVector.Pitch, lastStateVector.Roll, lastStateVector.Yaw).transpose() /
+    //                 paramsQuadrotor->mass  + (-GRAVITY_ACCELERATION * normalizeVector).transpose();
    
     //проверили в калькуляторе ускорения - вроде ок
     // результат до деления на массу : (0, 0, -0.5383) / 0.0630 = (0, 0, -8.54444444), что совпадает

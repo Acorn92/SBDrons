@@ -67,15 +67,19 @@ void Simulator::run()
 
 		targetPoint << 0, 0, 40, 0;
 	// Выполняем моделирование системы в цикле
+	VectorXd_t angularVelocityRotors(4);
+	angularVelocityRotors << 0, 0, 0, 0;
+	sendMessage(stateVector);
 	for (double t = 0; t < paramsSimulator.simulationTotalTime; t += paramsSimulator.dt)
 	{
-		VectorXd_t angularVelocityRotors(4);
+	
 		stateVector.timeStamp = t;
 		// тут необходимо вызывать методы для получения комманд управления
 		angularVelocityRotors = controlSystem->calculateMotorVelocity(stateVector, targetPoint, t);
 		// тут необходимо вызывать методы для вычисления функции правых частей
 		stateVector = mathModelQuadrotor->calculateStateVector(stateVector, angularVelocityRotors);
 	
+
 		// Отправляем вектор состояния
 		// TODO - сука, летит выше точки назначение
 	// проверить значения угловых двигателей после достижения точки

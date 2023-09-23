@@ -11,10 +11,10 @@
 class PID_Circuit
 {
 	public:
-		PID_Circuit(const Eigen::Vector3d Kp, const Eigen::Vector3d Ki, const Eigen::Vector3d Kd);
+		PID_Circuit (const Eigen::Vector3d Kp, const Eigen::Vector3d Ki, const Eigen::Vector3d Kd, double min, double max);
 		Eigen::Vector3d	 output(Eigen::Vector3d	 &inputValue, Eigen::Vector3d	 &targetValue, double dt);
 	private:
-		std::shared_ptr<PID[]> circuit;
+		std::unique_ptr<PID[]> circuit;
 		int countCircuit;	
 };
 
@@ -31,7 +31,8 @@ class UAVControlSystem
 		const ParamsQuadrotor		*paramsQuadrotor;
 		const ParamsControlSystem	*parContrlSyst;
 		
-		PID_Circuit *position;
+		PID_Circuit *position; //ПИД по позиции(вход - положение в системе координат, выход углы)
+		PID_Circuit *velocity; //ПИД по скорости(вход - скорость, выход ускорение)
 
 		// Ошибки
 		Eigen::Vector3d				angularRateError;
