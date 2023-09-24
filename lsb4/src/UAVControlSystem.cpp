@@ -32,9 +32,9 @@ Eigen::Vector3d	 PID_Circuit::output(Eigen::Vector3d &inputValue, Eigen::Vector3
 UAVControlSystem::UAVControlSystem(const ParamsControlSystem *paramsControlSystem, const ParamsSimulator *paramsSimulator,
 								   const ParamsQuadrotor *paramsQuadrotor, MotionPlanner* pathPlaner)
 {	
-	this->velocity = new PID_Circuit(paramsControlSystem->KpAngularRate, paramsControlSystem->KiAngularRate, paramsControlSystem->KdAngularRate, -3000, 3000);	
+	this->velocity = new PID_Circuit(paramsControlSystem->KpAngularRate, paramsControlSystem->KiAngularRate, paramsControlSystem->KdAngularRate, 100, 2631);	
 	// PID_Circuit angle(paramsControlSystem->KpAngle, paramsControlSystem->KiAngle, paramsControlSystem->KdAngle);
-	this->position = new PID_Circuit(paramsControlSystem->KpPosition, paramsControlSystem->KiPosition, paramsControlSystem->KdPosition, -3000, 3000);
+	this->position = new PID_Circuit(paramsControlSystem->KpPosition, paramsControlSystem->KiPosition, paramsControlSystem->KdPosition, 100, 2631);
 	//TODO: продолжить разработку системы управления. таймкод вебинара: 31:40
 	motionPlanner = pathPlaner;
 	this->paramsSimulator = paramsSimulator;
@@ -54,7 +54,7 @@ VectorXd_t	UAVControlSystem::calculateMotorVelocity(StateVector stateVector, Mat
 	for (int i = 0; i < 3; i++)
 		currentPosition[i] = stateVector[i];
 	for (int i = 0; i < 3; i++)
-		desiredAngle[i] = stateVector[6 + i];
+		desiredAngle[i] = stateVector[INDEX_VELOCITY_STATE + i];
 	this->mixerCommands = VectorXd_t(4);
 	//в этой функции делаем управление
 	this->indexPoint = time;
@@ -70,7 +70,7 @@ VectorXd_t	UAVControlSystem::calculateMotorVelocity(StateVector stateVector, Mat
 		//while (checkRadius(targetPoints))
 		//{
 			//летим
-	this->PIDPosition();
+	// this->PIDPosition();
 	// this->PIDAngles();
 	this->PIDAngularRate();
 		//}
@@ -90,10 +90,10 @@ VectorXd_t	UAVControlSystem::mixer()
 {
 	VectorXd_t res;
 
-	this->mixerCommands << this->desiredVelocity[2] + this->desiredAngularRate[0] - this->desiredAngularRate[2],
-						   this->desiredVelocity[2] - this->desiredAngularRate[1] + this->desiredAngularRate[2],
-						   this->desiredVelocity[2] - this->desiredAngularRate[0] - this->desiredAngularRate[2],
-						   this->desiredVelocity[2] + this->desiredAngularRate[1] + this->desiredAngularRate[2];
+	this->mixerCommands << /*this->desiredVelocity[2] + this->desiredAngularRate[0] -*/ this->desiredAngularRate[2],
+						   /*this->desiredVelocity[2] - this->desiredAngularRate[1] +*/ this->desiredAngularRate[2],
+						   /*this->desiredVelocity[2] /*- this->desiredAngularRate[0] -*/this->desiredAngularRate[2],
+						   /*this->desiredVelocity[2] /*+ this->desiredAngularRate[1] + */this->desiredAngularRate[2];
 	return res;
 }
 
@@ -147,7 +147,7 @@ void		UAVControlSystem::PIDAngles()
  */
 void UAVControlSystem::PIDAngularRate()
 {
-	Eigen::Vector3d desiredAR(0, 0, 0);
+	Eigen::Vector3d desiredAR(0, 0, 1);
 	this->desiredAngularRate = this->velocity->output(desiredAngle, desiredAR, paramsSimulator->dt);
 }
 

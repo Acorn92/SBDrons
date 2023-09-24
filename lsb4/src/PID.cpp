@@ -18,7 +18,8 @@ double PID::update(double inputValue, double targetValue, double dt)
     PIDValue pidData = {0};
     double error = targetValue - inputValue;
 
-    this->integral = saturation( (this->integral + (error * dt)), 0, this->integralLimit);
+    this->integral += (error * dt);
+    this->integral = saturation(this->integral, -this->integralLimit, this->integralLimit);
     // this->integral += error * dt;
     pidData.P = this->k_p * error;
     pidData.I = this->k_i * this->integral;

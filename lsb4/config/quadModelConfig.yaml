@@ -3,7 +3,7 @@
 # Шаг интегрирования симулятора (сек)
 simulationStep: 0.01
 # Время симуляции
-simulationTotalTime: 1000
+simulationTotalTime: 2000
 # Масса аппарата (кг)
 mass: 0.0630
 # Коэффициент тяги двигателей

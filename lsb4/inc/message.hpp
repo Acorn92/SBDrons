@@ -9,14 +9,14 @@ struct StateVector
 	double X; 
 	double Y;
 	double Z;
-	// Угловое положение ЛА
-	double Pitch;//тангаж
-	double Roll;//крен
-	double Yaw;//рыскание
 	// скорость ЛА в стартовой СК
 	double VelX;
 	double VelY;
 	double VelZ;
+	// Угловое положение ЛА
+	double Pitch;//тангаж
+	double Roll;//крен
+	double Yaw;//рыскание
 	// Угловая скорость ЛА
 	double PitchRate;
 	double RollRate;
@@ -38,13 +38,13 @@ struct StateVector
 		{
 			case 0: return this->X;
 			case 1: return this->Y;
-			case 2: return this->Z;
-			case 3: return this->Pitch;
-			case 4: return this->Roll;
-			case 5: return this->Yaw;
-			case 6: return this->VelX;
-			case 7: return this->VelY;
-			case 8: return this->VelZ;
+			case 2: return this->Z;			
+			case 3: return this->VelX;
+			case 4: return this->VelY;
+			case 5: return this->VelZ;
+			case 6: return this->Pitch;
+			case 7: return this->Roll;
+			case 8: return this->Yaw;
 			case 9: return this->PitchRate;
 			case 10: return this->RollRate;
 			case 11: return this->YawRate;
@@ -76,14 +76,14 @@ struct StateVector
 		Y = a.Y;
 		Z = a.Z;
 		Pitch = a.Pitch;
-		Roll += a.Roll;
-		Yaw += a.Yaw;
-		VelX += a.VelX;
-		VelY += a.VelY;
-		VelZ += a.VelZ;
-		PitchRate += a.PitchRate;
-		RollRate += a.RollRate;
-		YawRate += a.YawRate;
+		Roll = a.Roll;
+		Yaw = a.Yaw;
+		VelX = a.VelX;
+		VelY = a.VelY;
+		VelZ = a.VelZ;
+		PitchRate = a.PitchRate;
+		RollRate = a.RollRate;
+		YawRate = a.YawRate;
 		timeStamp = a.timeStamp;
 		return *this;
 	}
@@ -113,6 +113,8 @@ struct StateVector
 #pragma pack(pop) // выравнивание в памяти
 
 #define INDEX_POSITION_STATE 0
-#define INDEX_VELOCITY_STATE 6
+#define INDEX_VELOCITY_STATE 3
+#define INDEX_ANGLE_POSITION_STATE 6
+#define INDEX_RATE_STATE 9
 
 #endif
