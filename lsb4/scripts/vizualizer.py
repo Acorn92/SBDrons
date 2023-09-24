@@ -291,18 +291,24 @@ class uavDynamicVisualizer():
 
         # print(self.stateVector)
         tr = MatrixTransform()
-        tr.rotate(radToDeg * self.stateVector[3], (1, 0, 0))
-        tr.rotate(radToDeg * self.stateVector[4], (0, 1, 0))
-        tr.rotate(radToDeg * self.stateVector[5], (0, 0, 1))
+        # tr.rotate(radToDeg * self.stateVector[3], (1, 0, 0))
+        # tr.rotate(radToDeg * self.stateVector[4], (0, 1, 0))
+        # tr.rotate(radToDeg * self.stateVector[5], (0, 0, 1))
+        tr.rotate(radToDeg * self.stateVector[6], (1, 0, 0))
+        tr.rotate(radToDeg * self.stateVector[7], (0, 1, 0))
+        tr.rotate(radToDeg * self.stateVector[8], (0, 0, 1))
         tr.translate((self.stateVector[0],
                       self.stateVector[1],
                       self.stateVector[2]))
         self.uavBody.transform = tr
         self.axisBody.transform = tr
 
-        bodyOrientation = np.array([self.stateVector[3],
-                                    self.stateVector[4],
-                                    self.stateVector[5]])
+        # bodyOrientation = np.array([self.stateVector[3],
+        #                             self.stateVector[4],
+        #                             self.stateVector[5]])
+        bodyOrientation = np.array([self.stateVector[6],
+                                    self.stateVector[7],
+                                    self.stateVector[8]])
 
         if drawTrajLine:
             dataPlot = np.array([self.dataX, self.dataY, self.dataZ]).T

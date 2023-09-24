@@ -31,8 +31,15 @@ class UAVControlSystem
 		const ParamsQuadrotor		*paramsQuadrotor;
 		const ParamsControlSystem	*parContrlSyst;
 		
-		PID_Circuit *position; //ПИД по позиции(вход - положение в системе координат, выход углы)
-		PID_Circuit *velocity; //ПИД по скорости(вход - скорость, выход ускорение)
+		std::unique_ptr<PID_Circuit> position; //ПИД по позиции(вход - положение в системе координат, выход углы)
+		std::unique_ptr<PID_Circuit> velocity; //ПИД по скорости(вход - скорость, выход ускорение)
+		std::unique_ptr<PID_Circuit> angle; //ПИД по углу(вход - наклон по оси, выход скорость по оси)
+		std::unique_ptr<PID> thrust;//Пид по тяге
+
+		//текущие значения
+		Eigen::Vector3d	 			currentPosition;//текущая позиция
+		Eigen::Vector3d				currentVelocity;//текущая скорость
+		Eigen::Vector3d				currentAcceleration;//текущий наклон
 
 		// Ошибки
 		Eigen::Vector3d				angularRateError;
@@ -63,6 +70,7 @@ class UAVControlSystem
 
 		// Целевые параметры управления
 		double						desTang;// целевая тяга(координата Z)
+		double 						desYaw;
 		Eigen::Vector3d				desiredPosition;
 		Eigen::Vector3d				desiredVelocity;
 		Eigen::Vector3d				desiredAcceleration;
@@ -72,7 +80,7 @@ class UAVControlSystem
 		Eigen::Vector3d				desiredAngularRate;
 		Eigen::Vector3d				desiredAngularAcceleration;
 
-		Eigen::Vector3d	 			currentPosition ;//текущая позиция
+		
 
 		VectorXd_t					mixerCommands;
 		StateVector					stateVector;
