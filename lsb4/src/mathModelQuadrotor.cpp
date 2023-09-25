@@ -130,6 +130,9 @@ StateVector	MathModelQuadrotor::functionRight(StateVector &lastStateVector, Vect
     //проверили в калькуляторе ускорения - вроде ок
     // результат до деления на массу : (0, 0, -0.5383) / 0.0630 = (0, 0, -8.54444444), что совпадает
     // переписывание формулы в соотв с инстркцией, без преобразований даёт похожий результат
+
+    // for (int i = 0; i < 3; i++)
+    //     angularVelocity[i] = lastStateVector[INDEX_RATE_STATE + i];
   
     angularAcceleration = inertialTensor.inverse() * 
                           (momentsThrustRotors - angularVelocity.cross(inertialTensor * angularVelocity));
@@ -143,8 +146,9 @@ StateVector	MathModelQuadrotor::functionRight(StateVector &lastStateVector, Vect
     // res.VelY = acceleration[1];
     // res.VelZ = acceleration[2];
     // //запишем значение углового ускорения
-    // res.PitchRate = angularAcceleration[0];
-    // res.RollRate = angularAcceleration[1];
+    // angularAcceleration[0] = 0;
+    angularAcceleration[1] = 0;
+    angularAcceleration[2] = 0;
     // res.YawRate = angularAcceleration[2];;
 
     return res;

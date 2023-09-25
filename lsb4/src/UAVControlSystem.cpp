@@ -34,7 +34,7 @@ UAVControlSystem::UAVControlSystem(const ParamsControlSystem *paramsControlSyste
 {	
 	this->position = std::unique_ptr<PID_Circuit>(new PID_Circuit(paramsControlSystem->KpPosition, paramsControlSystem->KiPosition, paramsControlSystem->KdPosition, 0, 3.1416));	
 	this->angle = std::unique_ptr<PID_Circuit>(new PID_Circuit(paramsControlSystem->KpAngle, paramsControlSystem->KiAngle, paramsControlSystem->KdAngle, 0, 15));
-	this->velocity = std::unique_ptr<PID_Circuit>(new PID_Circuit(paramsControlSystem->KpAngularRate, paramsControlSystem->KiAngularRate, paramsControlSystem->KdAngularRate, -2600, 2600));	
+	this->velocity = std::unique_ptr<PID_Circuit>(new PID_Circuit(paramsControlSystem->KpAngularRate, paramsControlSystem->KiAngularRate, paramsControlSystem->KdAngularRate, -15, 15));	
 	
 
 	this->thrust = std::unique_ptr<PID>(new PID(paramsControlSystem->KpPosition[2],paramsControlSystem->KiPosition[2], paramsControlSystem->KdPosition[2], 1500, 2631));
@@ -80,7 +80,7 @@ VectorXd_t	UAVControlSystem::calculateMotorVelocity(StateVector stateVector, Mat
 		//while (checkRadius(targetPoints))
 		//{
 			//летим
-	// this->PIDThrust();
+	this->PIDThrust();
 	// this->PIDPosition();
 
 	// this->PIDAngles();
@@ -168,7 +168,7 @@ void		UAVControlSystem::PIDAngles()
  */
 void UAVControlSystem::PIDAngularRate()
 {
-	this->desiredVelocity << 0, 0, 1;
+	this->desiredVelocity << 0, 0, 0;
 	this->desiredAngularRate = this->velocity->output(this->currentVelocity, this->desiredVelocity, this->paramsSimulator->dt);
 }
 
