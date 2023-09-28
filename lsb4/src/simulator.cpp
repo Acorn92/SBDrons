@@ -65,7 +65,7 @@ void Simulator::run()
 		stateVector.timeStamp = 0;
 		MatrixXd_t targetPoint(1, 4);
 
-		targetPoint << 0, 0, 10, 0.5;
+		targetPoint << 30, 0, 10, 0;
 	// Выполняем моделирование системы в цикле
 	VectorXd_t angularVelocityRotors(4);
 	angularVelocityRotors << 0, 0, 0, 0;

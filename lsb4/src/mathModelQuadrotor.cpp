@@ -122,7 +122,7 @@ StateVector	MathModelQuadrotor::functionRight(StateVector &lastStateVector, Vect
     momentsThrustRotors[2] = paramsQuadrotor->d * (squarAVR[3]+ squarAVR[1] - squarAVR[0] - squarAVR[2]);
 
     acceleration = ((paramsQuadrotor->b * sumRotorAngularVelocity)*normalizeVector.transpose() * 
-                    Math::rotationMatrix(lastStateVector.Roll, lastStateVector.Pitch, lastStateVector.Yaw) +
+                    Math::rotationMatrix(lastStateVector.Pitch, lastStateVector.Roll, lastStateVector.Yaw) +
                     paramsQuadrotor->mass * (-GRAVITY_ACCELERATION * normalizeVector.transpose()) ) / paramsQuadrotor->mass;
     // acceleration = (sumRotorAngularVelocity * normalizeVector).transpose() * Math::rotationMatrix(lastStateVector.Pitch, lastStateVector.Roll, lastStateVector.Yaw).transpose() /
     //                 paramsQuadrotor->mass  + (-GRAVITY_ACCELERATION * normalizeVector).transpose();
@@ -147,8 +147,8 @@ StateVector	MathModelQuadrotor::functionRight(StateVector &lastStateVector, Vect
     // res.VelZ = acceleration[2];
     // //запишем значение углового ускорения
     // angularAcceleration[0] = 0;
-    angularAcceleration[1] = 0;
-    angularAcceleration[2] = 0;
+    // angularAcceleration[1] = 0;
+    // angularAcceleration[2] = 0;
     // res.YawRate = angularAcceleration[2];;
 
     return res;

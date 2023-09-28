@@ -12,12 +12,6 @@ UAVControlSystem.hpp
 iostream
 -
 
-/home/ac/Projects/SkillboxDrons/lsb4/src/mathModelQuadrotor.cpp
-mathModelQuadrotor.hpp
-/home/ac/Projects/SkillboxDrons/lsb4/src/mathModelQuadrotor.hpp
-iostream
--
-
 /usr/include/eigen3/Eigen/Cholesky
 Core
 /usr/include/eigen3/Eigen/Core
@@ -1084,14 +1078,6 @@ inc/math.hpp
 Eigen/Dense
 -
 typesData.hpp
--
-
-inc/mathModelQuadrotor.hpp
-typesData.hpp
--
-math.hpp
--
-message.hpp
 -
 
 inc/message.hpp

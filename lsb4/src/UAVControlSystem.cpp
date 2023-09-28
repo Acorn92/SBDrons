@@ -32,8 +32,9 @@ Eigen::Vector3d	 PID_Circuit::output(Eigen::Vector3d &inputValue, Eigen::Vector3
 UAVControlSystem::UAVControlSystem(const ParamsControlSystem *paramsControlSystem, const ParamsSimulator *paramsSimulator,
 								   const ParamsQuadrotor *paramsQuadrotor, MotionPlanner* pathPlaner)
 {	
-	this->position = std::unique_ptr<PID_Circuit>(new PID_Circuit(paramsControlSystem->KpPosition, paramsControlSystem->KiPosition, paramsControlSystem->KdPosition, 0, 3.1416));	
-	this->angle = std::unique_ptr<PID_Circuit>(new PID_Circuit(paramsControlSystem->KpAngle, paramsControlSystem->KiAngle, paramsControlSystem->KdAngle, 0, 15));
+	this->position = std::unique_ptr<PID_Circuit>(new PID_Circuit(paramsControlSystem->KpPosition, paramsControlSystem->KiPosition, paramsControlSystem->KdPosition, -0.2, 0.2));	
+	//перенастроить
+	this->angle = std::unique_ptr<PID_Circuit>(new PID_Circuit(paramsControlSystem->KpAngle, paramsControlSystem->KiAngle, paramsControlSystem->KdAngle, -15, 15));
 	this->velocity = std::unique_ptr<PID_Circuit>(new PID_Circuit(paramsControlSystem->KpAngularRate, paramsControlSystem->KiAngularRate, paramsControlSystem->KdAngularRate, -15, 15));	
 	
 
@@ -81,9 +82,9 @@ VectorXd_t	UAVControlSystem::calculateMotorVelocity(StateVector stateVector, Mat
 		//{
 			//летим
 	this->PIDThrust();
-	// this->PIDPosition();
+	this->PIDPosition();
 
-	// this->PIDAngles();
+	this->PIDAngles();
 	this->PIDAngularRate();
 		//}
 		//миксер
@@ -126,8 +127,7 @@ void UAVControlSystem::fillDesiredPosition(MatrixXd_t targetPoints)
 {
 	for (int i = 0; i < 3; i++)
 		this->desiredPosition[i] = targetPoints(this->indexPoint,i);
-	this->desYaw = targetPoints(this->indexPoint,3);//рыскание
-	
+	this->desYaw = targetPoints(this->indexPoint,3);//рыскание	
 }
 
 /**
@@ -146,11 +146,14 @@ void		UAVControlSystem::PIDThrust()
  */
 void		UAVControlSystem::PIDPosition()
 {
-	Eigen::Vector3d normalizeVector(0, 0, 1);
 	this->desiredAcceleration = this->position->output(this->currentPosition, this->desiredPosition, this->paramsSimulator->dt);
+	this->desiredAcceleration[2] = 0;
 	//TODO - добавить матрицу повротов
-	this->desiredAcceleration = (this->desiredAcceleration.transpose()) * (Math::rotationMatrix2d(this->currentAcceleration[2]).transpose());
+	this->desiredAcceleration = this->desiredAcceleration.transpose() * Math::rotationMatrix2d(this->currentAcceleration[2]);
+	// this->desiredAcceleration[0] = 0.5;
+	this->desiredAcceleration[1] = 0;
 	this->desiredAcceleration[2] = this->desYaw;
+	// this->desiredAcceleration[2] = 0;
 }
 
 /**
@@ -168,7 +171,7 @@ void		UAVControlSystem::PIDAngles()
  */
 void UAVControlSystem::PIDAngularRate()
 {
-	this->desiredVelocity << 0, 0, 0;
+	// this->desiredVelocity << 0.1, 0.1, 0.1;
 	this->desiredAngularRate = this->velocity->output(this->currentVelocity, this->desiredVelocity, this->paramsSimulator->dt);
 }
 
