@@ -148,7 +148,6 @@ void		UAVControlSystem::PIDPosition()
 {
 	this->desiredAcceleration = this->position->output(this->currentPosition, this->desiredPosition, this->paramsSimulator->dt);
 	this->desiredAcceleration[2] = 0;
-	//TODO - добавить матрицу повротов
 	this->desiredAcceleration = this->desiredAcceleration.transpose() * Math::rotationMatrix2d(this->currentAcceleration[2]);
 	// this->desiredAcceleration[0] = 0.5;
 	this->desiredAcceleration[1] = 0;
