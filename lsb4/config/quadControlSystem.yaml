@@ -13,11 +13,11 @@ KpZAngularRate: 0.25
 KiZAngularRate: 0
 KdZAngularRate: 0
 # Коэффициенты ПИД регулятора углового положения по оси X
-KpXAngle: 15
+KpXAngle: 10
 KiXAngle: 1
 KdXAngle: 2
 # Коэффициенты ПИД регулятора углового положения по оси Y
-KpYAngle: 15
+KpYAngle: 10
 KiYAngle: 1
 KdYAngle: 2
 # Коэффициенты ПИД регулятора углового положения по оси Z
@@ -29,9 +29,9 @@ KpXPosition: 0.65
 KiXPosition: 0.001
 KdXPosition: 1.15
 # Коэффициенты ПИД регулятора пространственного положения по оси Y
-KpYPosition: 0
-KiYPosition: 0
-KdYPosition: 0
+KpYPosition: 0.65
+KiYPosition: 0.01
+KdYPosition: 0.95
 # Коэффициенты ПИД регулятора пространственного положения по оси Z
 KpZPosition: 325
 KiZPosition: 137

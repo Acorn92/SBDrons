@@ -13,6 +13,7 @@ class PID_Circuit
 	public:
 		PID_Circuit (const Eigen::Vector3d Kp, const Eigen::Vector3d Ki, const Eigen::Vector3d Kd, double min, double max);
 		Eigen::Vector3d	 output(Eigen::Vector3d	 &inputValue, Eigen::Vector3d	 &targetValue, double dt);
+		
 	private:
 		std::unique_ptr<PID[]> circuit;
 		int countCircuit;	
@@ -25,7 +26,9 @@ class UAVControlSystem
 	public:
 		UAVControlSystem(const ParamsControlSystem *paramsControlSystem, const ParamsSimulator *paramsSimulator,
 						 const ParamsQuadrotor *paramsQuadrotor, MotionPlanner* motionPlanner);
-		VectorXd_t					calculateMotorVelocity(StateVector stateVector, MatrixXd_t targetPoints, double time);
+		VectorXd_t					calculateMotorVelocity(StateVector stateVector, VectorXd_t targetPoints, double time);
+		
+		bool 				checkRadius(const VectorXd_t& waypoint);
 	private:
 		const ParamsSimulator		*paramsSimulator;
 		const ParamsQuadrotor		*paramsQuadrotor;
@@ -72,6 +75,7 @@ class UAVControlSystem
 		double						desTang;// целевая тяга(координата Z)
 		double 						desYaw;
 		Eigen::Vector3d				desiredPosition;
+		Eigen::Vector3d				desiredPositionP;
 		Eigen::Vector3d				desiredVelocity;
 		Eigen::Vector3d				desiredAcceleration;
 		Eigen::Vector3d				desiredTorque;
@@ -87,18 +91,18 @@ class UAVControlSystem
 		double						time;
 		double						timeTrajectory; // время, за которое БЛА пролетает траекторию
 		double						timeStopTrajectory; // время, для остановки движения дрона, после достижения конечной точки
-		double						indexPoint; // текущая точка, к которой летит БЛА
+		int						indexPoint; // текущая точка, к которой летит БЛА
 		bool						stopTime; // отключает расчёт траектории от времени
 
 		MotionPlanner*				motionPlanner;
 
 		VectorXd_t			mixer();
-		void				fillDesiredPosition(MatrixXd_t targetPoints);
+		
 		void				PIDThrust();
 		void				PIDPosition();
 		void				PIDAngles();
 		void				PIDAngularRate();
-		bool 				checkRadius(const Eigen::Vector3d& waypoint);
+		void				fillDesiredPosition(VectorXd_t targetPoints);
 		void				saturation(double &arg, double min, double max);
 		double				commandThrustToOmegaRotors(double commandThrust);
 };

@@ -32,9 +32,9 @@ Eigen::Vector3d	 PID_Circuit::output(Eigen::Vector3d &inputValue, Eigen::Vector3
 UAVControlSystem::UAVControlSystem(const ParamsControlSystem *paramsControlSystem, const ParamsSimulator *paramsSimulator,
 								   const ParamsQuadrotor *paramsQuadrotor, MotionPlanner* pathPlaner)
 {	
-	this->position = std::unique_ptr<PID_Circuit>(new PID_Circuit(paramsControlSystem->KpPosition, paramsControlSystem->KiPosition, paramsControlSystem->KdPosition, -0.2, 0.2));	
+	this->position = std::unique_ptr<PID_Circuit>(new PID_Circuit(paramsControlSystem->KpPosition, paramsControlSystem->KiPosition, paramsControlSystem->KdPosition, -0.5, 0.5));	
 	//перенастроить
-	this->angle = std::unique_ptr<PID_Circuit>(new PID_Circuit(paramsControlSystem->KpAngle, paramsControlSystem->KiAngle, paramsControlSystem->KdAngle, -15, 15));
+	this->angle = std::unique_ptr<PID_Circuit>(new PID_Circuit(paramsControlSystem->KpAngle, paramsControlSystem->KiAngle, paramsControlSystem->KdAngle, -5, 5));
 	this->velocity = std::unique_ptr<PID_Circuit>(new PID_Circuit(paramsControlSystem->KpAngularRate, paramsControlSystem->KiAngularRate, paramsControlSystem->KdAngularRate, -15, 15));	
 	
 
@@ -46,6 +46,8 @@ UAVControlSystem::UAVControlSystem(const ParamsControlSystem *paramsControlSyste
 	this->desiredAngularRate << 0, 0, 0;
 	this->desiredAngularRate << 0, 0, 0;
 	this->desTang = 0;
+	this->desiredPosition << 0, 0, 0;
+	this->desiredPositionP << 0, 0, 0;
 }
 
 /**
@@ -56,7 +58,7 @@ UAVControlSystem::UAVControlSystem(const ParamsControlSystem *paramsControlSyste
  * @param time 
  * @return VectorXd_t 
  */
-VectorXd_t	UAVControlSystem::calculateMotorVelocity(StateVector stateVector, MatrixXd_t targetPoints, double time)
+VectorXd_t	UAVControlSystem::calculateMotorVelocity(StateVector stateVector, VectorXd_t targetPoints, double time)
 {
 	for (int i = 0; i < 3; i++)
 	{
@@ -67,30 +69,24 @@ VectorXd_t	UAVControlSystem::calculateMotorVelocity(StateVector stateVector, Mat
 		this->currentAcceleration[i] = stateVector[INDEX_ANGLE_POSITION_STATE + i];
 	}
 	this->mixerCommands = VectorXd_t(4);
-	//в этой функции делаем управление
-	this->indexPoint = 0;
 	this->stateVector = stateVector;
-	//пока не пролетели все точки из траектории
-	// //while (this->indexPoint < motionPlanner->getSizeTimeTrajectory())
-	// while (time < 1/*количество точек*/)
-	// {
-		//назначем точку как целевую
-	this->fillDesiredPosition(targetPoints);
+	fillDesiredPosition(targetPoints);
 	
-		//пока не прилетели
-		//while (checkRadius(targetPoints))
-		//{
-			//летим
+	// for (int i = 0; i < 2; i++)
+	// {
+	// 	if ((abs(desiredPosition[i] - currentPosition[i]) <= 0.5) && (abs(currentPosition[i] - desiredPosition[i]) <= 0.1))
+
+    // 		desiredPosition[i] = (desiredPosition[i] != desiredPositionP[i]) ? (currentPosition[i] + 1) : desiredPositionP[i];
+	// }
+
+	
+
 	this->PIDThrust();
 	this->PIDPosition();
-
 	this->PIDAngles();
 	this->PIDAngularRate();
-		//}
-		//миксер
-		//летим в следующую
 	mixer();
-	// }
+
 	return this->mixerCommands;
 }
 
@@ -107,14 +103,6 @@ VectorXd_t	UAVControlSystem::mixer()
 						   this->desTang - this->desiredAngularRate[1] + this->desiredAngularRate[2],
 						   this->desTang - this->desiredAngularRate[0] - this->desiredAngularRate[2],
 						   this->desTang + this->desiredAngularRate[1] + this->desiredAngularRate[2];
-	// this->mixerCommands << -this->desiredAngularRate[2],
-	// 					   this->desiredAngularRate[2],
-	// 					   -this->desiredAngularRate[2],
-	// 					   this->desiredAngularRate[2];
-	// this->mixerCommands << this->desTang,
-	// 					   this->desTang,
-	// 					   this->desTang,
-	// 					   this->desTang;
 	return res;
 }
 
@@ -123,11 +111,12 @@ VectorXd_t	UAVControlSystem::mixer()
  * 
  * @param targetPoints массив точек
  */
-void UAVControlSystem::fillDesiredPosition(MatrixXd_t targetPoints)
+void UAVControlSystem::fillDesiredPosition(VectorXd_t targetPoints)
 {
 	for (int i = 0; i < 3; i++)
-		this->desiredPosition[i] = targetPoints(this->indexPoint,i);
-	this->desYaw = targetPoints(this->indexPoint,3);//рыскание	
+		this->desiredPosition[i] = targetPoints(i);
+	this->desiredPosition[2] = targetPoints(2);
+	this->desYaw = targetPoints(3);//рыскание	
 }
 
 /**
@@ -149,8 +138,9 @@ void		UAVControlSystem::PIDPosition()
 	this->desiredAcceleration = this->position->output(this->currentPosition, this->desiredPosition, this->paramsSimulator->dt);
 	this->desiredAcceleration[2] = 0;
 	this->desiredAcceleration = this->desiredAcceleration.transpose() * Math::rotationMatrix2d(this->currentAcceleration[2]);
-	// this->desiredAcceleration[0] = 0.5;
-	this->desiredAcceleration[1] = 0;
+	// this->desiredAcceleration[0] = 0;
+	// this->desiredAcceleration[1] = 0;
+	this->desiredAcceleration[1] = this->desiredAcceleration[1] * (-1);
 	this->desiredAcceleration[2] = this->desYaw;
 	// this->desiredAcceleration[2] = 0;
 }
@@ -181,9 +171,16 @@ void UAVControlSystem::PIDAngularRate()
  * @return true - принадлежим сфере 
  * @return false - не принадлежим сфере
  */
-bool UAVControlSystem::checkRadius(const Eigen::Vector3d& waypoint)
+bool UAVControlSystem::checkRadius(const VectorXd_t& waypoint)
 {
-	if ((this->currentPosition - waypoint).norm() <= 0.01)
+	// if ((this->currentPosition - buf).norm() <= 0.01)
+	Eigen::Vector3d	buf;
+	buf[0] = waypoint[0];
+	buf[1] = waypoint[1];
+	buf[2] = waypoint[2];
+	if ((pow((this->currentPosition[0] - buf[0]),2) + 
+		pow((this->currentPosition[1] - buf[1]),2) +
+		pow((this->currentPosition[2] - buf[2]),2)) <= pow(0.3, 2))	
 		return (true);
 	else
 		return (false);

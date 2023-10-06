@@ -63,19 +63,22 @@ void Simulator::run()
 	    stateVector.YawRate = 0;
 		// устанавливаем метку времени
 		stateVector.timeStamp = 0;
-		MatrixXd_t targetPoint(1, 4);
+		MatrixXd_t targetPoint(3, 4);
 
-		targetPoint << 5, 0, 10, 0;
+		targetPoint << 0, 5, 10, 0,
+					   0, 9, 7, 0.2,
+		 			   15, 9, 10, 0;
+	int countPoints = 0;
 	// Выполняем моделирование системы в цикле
 	VectorXd_t angularVelocityRotors(4);
 	angularVelocityRotors << 0, 0, 0, 0;
 	sendMessage(stateVector);
 	for (double t = 0; t < paramsSimulator.simulationTotalTime; t += paramsSimulator.dt)
 	{
-	
+		
 		stateVector.timeStamp = t;
 		// тут необходимо вызывать методы для получения комманд управления
-		angularVelocityRotors = controlSystem->calculateMotorVelocity(stateVector, targetPoint, t);
+		angularVelocityRotors = controlSystem->calculateMotorVelocity(stateVector, Math::matrixToVectorXd_t(targetPoint, countPoints), t);
 		// тут необходимо вызывать методы для вычисления функции правых частей
 		stateVector = mathModelQuadrotor->calculateStateVector(stateVector, angularVelocityRotors);
 	
@@ -87,6 +90,12 @@ void Simulator::run()
 		// Для простейшей имитации движения аппарата в реальном времени 
 		// можно вызывать задержку или воспользоваться прерываниями
 		usleep(paramsSimulator.dt * 1e6);
+
+		if (controlSystem->checkRadius(Math::matrixToVectorXd_t(targetPoint, countPoints)))
+			if (countPoints != (targetPoint.rows() - 1))
+				countPoints++;
+			else
+				countPoints = 0;
 	}
 }
 

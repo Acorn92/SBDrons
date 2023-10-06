@@ -8,6 +8,7 @@
 class MotionPlanner
 {
 	public:
+		MotionPlanner();
 		void			calculateTrajectory(StateVector stateVector, MatrixXd_t targetPoints, VectorXd_t timeTrajectory);
 		VectorXd_t		getRowsCoeffX(unsigned int indexRows);
 		VectorXd_t		getRowsCoeffY(unsigned int indexRows);
@@ -25,8 +26,11 @@ class MotionPlanner
 		MatrixXd_t	zCoeff;
 		// промежутки времени за которое БЛА пролетает траекторию
 		VectorXd_t	timeTrajectory;
+		int countPoitns;
+		int numberPoints;
 
-		MatrixXd_t		trajectoryGenerator(VectorXd_t currentPoints, VectorXd_t targetPoints, double T);
+
+		void		trajectoryGenerator(VectorXd_t currentPoints, VectorXd_t targetPoints, double T);
 };
 
 #endif
