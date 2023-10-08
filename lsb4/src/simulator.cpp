@@ -65,8 +65,8 @@ void Simulator::run()
 		stateVector.timeStamp = 0;
 		MatrixXd_t targetPoint(3, 4);
 
-		targetPoint << 0, 5, 10, 0,
-					   0, 9, 7, 0.2,
+		targetPoint << 2, 5, 10, 0,
+					   0, -5, 10, 0,
 		 			   15, 9, 10, 0;
 	int countPoints = 0;
 	// Выполняем моделирование системы в цикле
@@ -75,7 +75,8 @@ void Simulator::run()
 	sendMessage(stateVector);
 
 	VectorXd_t timeToPoints(targetPoint.rows());
-	timeToPoints << 4, 4, 5;
+	timeToPoints << 5, 5, 5;
+	// timeToPoints << 3;
 	motionPlanner->calculateTrajectory(stateVector, targetPoint, timeToPoints);
 
 	for (double t = 0; t < paramsSimulator.simulationTotalTime; t += paramsSimulator.dt)

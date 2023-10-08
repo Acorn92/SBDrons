@@ -9,6 +9,8 @@
 /home/ac/Projects/SkillboxDrons/lsb4/src/UAVControlSystem.cpp
 UAVControlSystem.hpp
 /home/ac/Projects/SkillboxDrons/lsb4/src/UAVControlSystem.hpp
+cmath
+-
 iostream
 -
 

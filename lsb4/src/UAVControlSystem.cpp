@@ -1,5 +1,5 @@
 #include "UAVControlSystem.hpp"
-
+#include <cmath>
 #define DEBUG
 #ifdef DEBUG
 	#include <iostream>
@@ -47,6 +47,7 @@ UAVControlSystem::UAVControlSystem(const ParamsControlSystem *paramsControlSyste
 	this->desTang = 0;
 	this->desiredPosition << 0, 0, 0;
 	this->desiredPositionP << 0, 0, 0;
+	this->desYaw = 0;
 }
 
 /**
@@ -70,12 +71,12 @@ VectorXd_t	UAVControlSystem::calculateMotorVelocity(StateVector stateVector, Mat
 	this->mixerCommands = VectorXd_t(4);
 	this->stateVector = stateVector;
 
-	if (checkRadius(Math::matrixToVectorXd_t(targetPoints, this->indexPoint)))
-		if ( this->indexPoint < targetPoints.rows())
-			this->indexPoint++;
+	if (checkRadius(Math::matrixToVectorXd_t(targetPoints, this->indexPoint)) && ( this->indexPoint < (targetPoints.rows() - 1)))
+		this->indexPoint++;
+
 	// this->desiredPosition[2] = targetPoints(this->indexPoint, 2);
 	this->desYaw = targetPoints(this->indexPoint, 3);//рыскание
-	// fillDesiredPosition(Math::matrixToVectorXd_t(targetPoints, this->indexPoint));
+	//fillDesiredPosition(Math::matrixToVectorXd_t(targetPoints, this->indexPoint));
 	fillDesiredPositionForOPt();
 	this->PIDThrust();
 	this->PIDPosition();
@@ -169,6 +170,7 @@ void		UAVControlSystem::PIDAngles()
 void UAVControlSystem::PIDAngularRate()
 {
 	// this->desiredVelocity << 0.1, 0.1, 0.1;
+	// this->desiredVelocity[2] = 0.1;
 	this->desiredAngularRate = this->velocity->output(this->currentVelocity, this->desiredVelocity, this->paramsSimulator->dt);
 }
 
@@ -186,9 +188,16 @@ bool UAVControlSystem::checkRadius(const VectorXd_t& waypoint)
 	buf[0] = waypoint[0];
 	buf[1] = waypoint[1];
 	buf[2] = waypoint[2];
-	if ((pow((this->currentPosition[0] - buf[0]),2) + 
-		pow((this->currentPosition[1] - buf[1]),2) +
-		pow((this->currentPosition[2] - buf[2]),2)) <= pow(0.3, 2))	
+	// if ((pow((this->currentPosition[0] - buf[0]),2) + 
+	// 	pow((this->currentPosition[1] - buf[1]),2) +
+	// 	pow((this->currentPosition[2] - buf[2]),2)) <= pow(0.3, 2))	
+	// 	return (true);
+	// else
+	// 	return (false);
+
+	if ((abs(buf[0] - this->currentPosition[0]) < 0.3) && 
+		(abs(buf[1] - this->currentPosition[1]) < 0.3) &&
+		(abs(buf[2] - this->currentPosition[2]) < 0.3))
 		return (true);
 	else
 		return (false);

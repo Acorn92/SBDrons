@@ -40,22 +40,22 @@ void MotionPlanner::calculateTrajectory(StateVector stateVector, MatrixXd_t targ
 
 VectorXd_t		MotionPlanner::getRowsCoeffX(unsigned int indexRows)
 {
-	return (Math::matrixToVectorXd_t(xCoeff, indexRows));
+	return (Math::matrixToVectorXd_t(this->xCoeff, indexRows));
 }
 
 VectorXd_t		MotionPlanner::getRowsCoeffY(unsigned int indexRows)
 {
-	return (Math::matrixToVectorXd_t(yCoeff, indexRows));
+	return (Math::matrixToVectorXd_t(this->yCoeff, indexRows));
 }
 
 VectorXd_t		MotionPlanner::getRowsCoeffZ(unsigned int indexRows)
 {
-	return (Math::matrixToVectorXd_t(zCoeff, indexRows));
+	return (Math::matrixToVectorXd_t(this->zCoeff, indexRows));
 }
 
 double			MotionPlanner::getTimeTrajectory(unsigned int indexPoint)
 {
-	return (timeTrajectory(indexPoint));
+	return (this->timeTrajectory(indexPoint));
 }
 
 unsigned int	MotionPlanner::getSizeTimeTrajectory()
@@ -79,7 +79,7 @@ double			MotionPlanner::calculateDesiredPosition(VectorXd_t c, double t)
 		std::cout << c(i) << " ";
 	}
 	std::cout << std::endl;
-	c[5]*pow(t,5) + c[4]*pow(t,4) + c[3]*pow(t,3) + c[2]*pow(t,2) + c[1]*t + c[0];
+	return c[5]*pow(t,5) + c[4]*pow(t,4) + c[3]*pow(t,3) + c[2]*pow(t,2) + c[1]*t + c[0];
 	
 }
 
