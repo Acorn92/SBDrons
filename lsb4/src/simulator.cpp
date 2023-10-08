@@ -73,12 +73,17 @@ void Simulator::run()
 	VectorXd_t angularVelocityRotors(4);
 	angularVelocityRotors << 0, 0, 0, 0;
 	sendMessage(stateVector);
+
+	VectorXd_t timeToPoints(targetPoint.rows());
+	timeToPoints << 4, 4, 5;
+	motionPlanner->calculateTrajectory(stateVector, targetPoint, timeToPoints);
+
 	for (double t = 0; t < paramsSimulator.simulationTotalTime; t += paramsSimulator.dt)
 	{
 		
 		stateVector.timeStamp = t;
 		// тут необходимо вызывать методы для получения комманд управления
-		angularVelocityRotors = controlSystem->calculateMotorVelocity(stateVector, Math::matrixToVectorXd_t(targetPoint, countPoints), t);
+		angularVelocityRotors = controlSystem->calculateMotorVelocity(stateVector, targetPoint, t);
 		// тут необходимо вызывать методы для вычисления функции правых частей
 		stateVector = mathModelQuadrotor->calculateStateVector(stateVector, angularVelocityRotors);
 	
@@ -91,11 +96,11 @@ void Simulator::run()
 		// можно вызывать задержку или воспользоваться прерываниями
 		usleep(paramsSimulator.dt * 1e6);
 
-		if (controlSystem->checkRadius(Math::matrixToVectorXd_t(targetPoint, countPoints)))
-			if (countPoints != (targetPoint.rows() - 1))
-				countPoints++;
-			else
-				countPoints = 0;
+		// if (controlSystem->checkRadius(Math::matrixToVectorXd_t(targetPoint, countPoints)))
+		// 	if (countPoints != (targetPoint.rows() - 1))
+		// 		countPoints++;
+		// 	else
+		// 		countPoints = 0;
 	}
 }
 

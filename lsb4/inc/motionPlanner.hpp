@@ -5,6 +5,8 @@
 #include <math.hpp>
 #include <message.hpp>
 
+#include <iostream>
+
 class MotionPlanner
 {
 	public:
@@ -26,8 +28,8 @@ class MotionPlanner
 		MatrixXd_t	zCoeff;
 		// промежутки времени за которое БЛА пролетает траекторию
 		VectorXd_t	timeTrajectory;
-		int countPoitns;
-		int numberPoints;
+		int countPoints;
+		int indexPoints;
 
 
 		void		trajectoryGenerator(VectorXd_t currentPoints, VectorXd_t targetPoints, double T);

@@ -39,7 +39,6 @@ UAVControlSystem::UAVControlSystem(const ParamsControlSystem *paramsControlSyste
 	
 
 	this->thrust = std::unique_ptr<PID>(new PID(paramsControlSystem->KpPosition[2],paramsControlSystem->KiPosition[2], paramsControlSystem->KdPosition[2], 1500, 2631));
-	//TODO: продолжить разработку системы управления. таймкод вебинара: 31:40
 	motionPlanner = pathPlaner;
 	this->paramsSimulator = paramsSimulator;
 	this->indexPoint = 0;
@@ -58,7 +57,7 @@ UAVControlSystem::UAVControlSystem(const ParamsControlSystem *paramsControlSyste
  * @param time 
  * @return VectorXd_t 
  */
-VectorXd_t	UAVControlSystem::calculateMotorVelocity(StateVector stateVector, VectorXd_t targetPoints, double time)
+VectorXd_t	UAVControlSystem::calculateMotorVelocity(StateVector stateVector, MatrixXd_t targetPoints, double time)
 {
 	for (int i = 0; i < 3; i++)
 	{
@@ -70,17 +69,14 @@ VectorXd_t	UAVControlSystem::calculateMotorVelocity(StateVector stateVector, Vec
 	}
 	this->mixerCommands = VectorXd_t(4);
 	this->stateVector = stateVector;
-	fillDesiredPosition(targetPoints);
-	
-	// for (int i = 0; i < 2; i++)
-	// {
-	// 	if ((abs(desiredPosition[i] - currentPosition[i]) <= 0.5) && (abs(currentPosition[i] - desiredPosition[i]) <= 0.1))
 
-    // 		desiredPosition[i] = (desiredPosition[i] != desiredPositionP[i]) ? (currentPosition[i] + 1) : desiredPositionP[i];
-	// }
-
-	
-
+	if (checkRadius(Math::matrixToVectorXd_t(targetPoints, this->indexPoint)))
+		if ( this->indexPoint < targetPoints.rows())
+			this->indexPoint++;
+	// this->desiredPosition[2] = targetPoints(this->indexPoint, 2);
+	this->desYaw = targetPoints(this->indexPoint, 3);//рыскание
+	// fillDesiredPosition(Math::matrixToVectorXd_t(targetPoints, this->indexPoint));
+	fillDesiredPositionForOPt();
 	this->PIDThrust();
 	this->PIDPosition();
 	this->PIDAngles();
@@ -118,6 +114,18 @@ void UAVControlSystem::fillDesiredPosition(VectorXd_t targetPoints)
 	this->desiredPosition[2] = targetPoints(2);
 	this->desYaw = targetPoints(3);//рыскание	
 }
+
+void UAVControlSystem::fillDesiredPositionForOPt()
+{
+	
+	this->desiredPosition[0] = this->motionPlanner->calculateDesiredPosition(this->motionPlanner->getRowsCoeffX(this->indexPoint), 
+																			this->motionPlanner->getTimeTrajectory(this->indexPoint));
+	this->desiredPosition[1] = this->motionPlanner->calculateDesiredPosition(this->motionPlanner->getRowsCoeffY(this->indexPoint), 
+																			this->motionPlanner->getTimeTrajectory(this->indexPoint));
+	this->desiredPosition[2] = this->motionPlanner->calculateDesiredPosition(this->motionPlanner->getRowsCoeffZ(this->indexPoint), 
+																			this->motionPlanner->getTimeTrajectory(this->indexPoint));
+}
+	
 
 /**
  * @brief ПИД по тяги

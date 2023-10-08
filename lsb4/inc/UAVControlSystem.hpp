@@ -26,7 +26,7 @@ class UAVControlSystem
 	public:
 		UAVControlSystem(const ParamsControlSystem *paramsControlSystem, const ParamsSimulator *paramsSimulator,
 						 const ParamsQuadrotor *paramsQuadrotor, MotionPlanner* motionPlanner);
-		VectorXd_t					calculateMotorVelocity(StateVector stateVector, VectorXd_t targetPoints, double time);
+		VectorXd_t					calculateMotorVelocity(StateVector stateVector, MatrixXd_t targetPoints, double time);
 		
 		bool 				checkRadius(const VectorXd_t& waypoint);
 	private:
@@ -91,7 +91,7 @@ class UAVControlSystem
 		double						time;
 		double						timeTrajectory; // время, за которое БЛА пролетает траекторию
 		double						timeStopTrajectory; // время, для остановки движения дрона, после достижения конечной точки
-		int						indexPoint; // текущая точка, к которой летит БЛА
+		int							indexPoint; // текущая точка, к которой летит БЛА
 		bool						stopTime; // отключает расчёт траектории от времени
 
 		MotionPlanner*				motionPlanner;
@@ -103,6 +103,7 @@ class UAVControlSystem
 		void				PIDAngles();
 		void				PIDAngularRate();
 		void				fillDesiredPosition(VectorXd_t targetPoints);
+		void				fillDesiredPositionForOPt();
 		void				saturation(double &arg, double min, double max);
 		double				commandThrustToOmegaRotors(double commandThrust);
 };
